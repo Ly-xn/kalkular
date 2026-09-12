@@ -1,9 +1,19 @@
 import React from 'react';
 import { Paintbrush, Heart, ShieldAlert, ArrowUp } from 'lucide-react';
 
-export function Footer() {
+export function Footer({ onOpenCalculator, onReset }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleMaterialesClick = (e) => {
+    e.preventDefault();
+    const el = document.getElementById('materiales');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (onOpenCalculator) {
+      onOpenCalculator();
+    }
   };
 
   return (
@@ -11,9 +21,18 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 md:px-8 space-y-8">
         
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-white/5">
-          {/* Brand */}
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#ff6a00] to-[#ea580c] text-white">
+          {/* Brand con función de reset */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              if (onReset) onReset();
+              else scrollToTop();
+            }}
+            className="flex items-center gap-3 text-left cursor-pointer group transition-transform hover:scale-[1.01]"
+            title="Volver al inicio y reiniciar calculadora"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#ff6a00] to-[#ea580c] text-white shadow-[0_0_15px_-3px_rgba(255,106,0,0.5)]">
               <Paintbrush className="h-5 w-5" />
             </div>
             <div>
@@ -24,12 +43,27 @@ export function Footer() {
                 La calculadora de presupuestos de pintura y materiales más transparente de Argentina.
               </p>
             </div>
-          </div>
+          </button>
 
           {/* Quick Links */}
           <div className="flex flex-wrap items-center gap-5 text-xs text-slate-400">
-            <a href="#calculadora" className="hover:text-white transition-colors">Calculadora</a>
-            <a href="#materiales" className="hover:text-white transition-colors">Materiales Mercado Libre</a>
+            <a 
+              href="#calculadora" 
+              onClick={(e) => {
+                e.preventDefault();
+                if (onOpenCalculator) onOpenCalculator();
+              }}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Calculadora
+            </a>
+            <a 
+              href="#materiales" 
+              onClick={handleMaterialesClick} 
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Materiales Recomendados
+            </a>
             <a href="#transparencia" className="hover:text-white transition-colors">Metodología de Precios</a>
             <a href="#faq" className="hover:text-white transition-colors">Preguntas Frecuentes</a>
           </div>
@@ -37,7 +71,7 @@ export function Footer() {
           {/* Scroll to Top */}
           <button
             onClick={scrollToTop}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
             aria-label="Volver arriba"
           >
             <ArrowUp className="h-4 w-4" />

@@ -19,7 +19,7 @@ export function MaterialsQuote({ quoteData }) {
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-3.5 py-1 text-xs font-bold text-yellow-300 uppercase tracking-wider mb-2.5">
             <ShoppingCart className="h-3.5 w-3.5 text-[#ffe600]" />
-            Catálogo & Afiliados Oficiales Mercado Libre
+            Materiales Recomendados
           </div>
           <h3 className="text-2xl md:text-3xl font-black text-white">
             Materiales Recomendados para tu Obra

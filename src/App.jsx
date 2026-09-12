@@ -8,6 +8,13 @@ import { FaqSection } from './components/FaqSection.jsx';
 import { Footer } from './components/Footer.jsx';
 
 export default function App() {
+  const [wizardKey, setWizardKey] = React.useState(0);
+
+  const handleResetAll = () => {
+    setWizardKey(prev => prev + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleScrollToCalculator = () => {
     const el = document.getElementById('calculadora');
     if (el) {
@@ -18,7 +25,10 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0a0d14] text-slate-100 flex flex-col font-sans selection:bg-[#ff6a00] selection:text-white">
       {/* Floating Dock Navbar */}
-      <Navbar onOpenCalculator={handleScrollToCalculator} />
+      <Navbar 
+        onOpenCalculator={handleScrollToCalculator} 
+        onReset={handleResetAll} 
+      />
 
       {/* Main Content */}
       <main className="flex-1">
@@ -26,7 +36,7 @@ export default function App() {
         <Hero onStartCalculator={handleScrollToCalculator} />
 
         {/* Wizard Calculadora */}
-        <CalculatorWizard />
+        <CalculatorWizard key={wizardKey} />
 
         {/* Sección de Transparencia y SEO */}
         <TransparencySection />
@@ -39,7 +49,10 @@ export default function App() {
       </main>
 
       {/* Footer con Disclaimer de Afiliados */}
-      <Footer />
+      <Footer 
+        onOpenCalculator={handleScrollToCalculator} 
+        onReset={handleResetAll} 
+      />
     </div>
   );
 }
