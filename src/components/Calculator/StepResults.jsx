@@ -46,7 +46,7 @@ export function StepResults({ quoteData, onEditInputs }) {
 
   const handleShareWhatsApp = () => {
     const url = buildWhatsAppShareUrl(quoteData);
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
