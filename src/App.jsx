@@ -6,6 +6,8 @@ import { TransparencySection } from './components/TransparencySection.jsx';
 import { WhyUsSection } from './components/WhyUsSection.jsx';
 import { FaqSection } from './components/FaqSection.jsx';
 import { Footer } from './components/Footer.jsx';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   const [wizardKey, setWizardKey] = React.useState(0);
@@ -77,6 +79,10 @@ export default function App() {
         onOpenCalculator={handleScrollToCalculator} 
         onReset={handleResetAll} 
       />
+
+      {/* Métricas y Monitoreo de Visitas de Vercel */}
+      <SpeedInsights />
+      <Analytics />
     </div>
   );
 }
