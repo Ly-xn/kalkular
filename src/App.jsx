@@ -9,6 +9,28 @@ import { Footer } from './components/Footer.jsx';
 
 export default function App() {
   const [wizardKey, setWizardKey] = React.useState(0);
+  
+  // Modo Claro por defecto, con persistencia en localStorage
+  const [theme, setTheme] = React.useState(() => {
+    const saved = localStorage.getItem('kalkular-theme');
+    return saved === 'dark' ? 'dark' : 'light';
+  });
+
+  React.useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.classList.remove('light');
+    } else {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    }
+    localStorage.setItem('kalkular-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const handleResetAll = () => {
     setWizardKey(prev => prev + 1);
@@ -23,11 +45,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0d14] text-slate-100 flex flex-col font-sans selection:bg-[#ff6a00] selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#0a0d14] dark:text-slate-100 flex flex-col font-sans selection:bg-[#ff6a00] selection:text-white transition-colors duration-300">
       {/* Floating Dock Navbar */}
       <Navbar 
         onOpenCalculator={handleScrollToCalculator} 
         onReset={handleResetAll} 
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       {/* Main Content */}

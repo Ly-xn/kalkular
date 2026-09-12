@@ -54,7 +54,7 @@ export function CalculatorWizard() {
       <div className="mx-auto max-w-5xl px-4 md:px-8">
         
         {/* Contenedor Principal con Glassmorphism */}
-        <div className="relative rounded-3xl md:rounded-[2.5rem] border border-white/10 bg-[#0d1322]/80 backdrop-blur-2xl p-5 sm:p-8 md:p-10 shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)]">
+        <div className="relative rounded-3xl md:rounded-[2.5rem] border border-slate-200/90 bg-white/95 shadow-xl dark:border-white/10 dark:bg-[#0d1322]/80 backdrop-blur-2xl p-5 sm:p-8 md:p-10 dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] transition-all">
           
           {/* Stepper Tabs Bar */}
           <div className="mb-8 md:mb-12">
@@ -68,17 +68,16 @@ export function CalculatorWizard() {
                     key={s.num}
                     type="button"
                     onClick={() => {
-                      // Permitir navegar a pasos previos o al paso de resultado si ya se calculó
                       if (isPassed || s.num <= currentStep) {
                         goToStep(s.num);
                       }
                     }}
                     className={`flex flex-col items-center sm:items-start p-2.5 sm:p-4 rounded-2xl border transition-all text-left ${
                       isCurrent
-                        ? 'border-[#ff6a00] bg-[#ff6a00]/10 shadow-[0_0_20px_-5px_rgba(255,106,0,0.4)]'
+                        ? 'border-[#ff6a00] bg-[#ff6a00]/10 shadow-[0_0_20px_-5px_rgba(255,106,0,0.3)]'
                         : isPassed
-                        ? 'border-emerald-500/40 bg-emerald-500/5 hover:bg-emerald-500/10'
-                        : 'border-white/5 bg-white/[0.02] opacity-50 cursor-not-allowed'
+                        ? 'border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20'
+                        : 'border-slate-200 bg-slate-50 opacity-60 cursor-not-allowed dark:border-white/5 dark:bg-white/[0.02]'
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-1">
@@ -87,18 +86,18 @@ export function CalculatorWizard() {
                           ? 'bg-[#ff6a00] text-white'
                           : isPassed
                           ? 'bg-emerald-500 text-white'
-                          : 'bg-white/10 text-slate-400'
+                          : 'bg-slate-200 text-slate-600 dark:bg-white/10 dark:text-slate-400'
                       }`}>
                         {isPassed ? <Check className="h-3.5 w-3.5" /> : s.num}
                       </span>
-                      <span className="hidden sm:inline text-xs font-bold text-white">
+                      <span className="hidden sm:inline text-xs font-bold text-slate-900 dark:text-white">
                         {s.title}
                       </span>
                     </div>
-                    <span className="hidden sm:inline text-[11px] text-slate-400">
+                    <span className="hidden sm:inline text-[11px] text-slate-500 dark:text-slate-400">
                       {s.desc}
                     </span>
-                    <span className="sm:hidden text-[10px] font-bold text-white">
+                    <span className="sm:hidden text-[10px] font-bold text-slate-900 dark:text-white">
                       Paso {s.num}
                     </span>
                   </button>
