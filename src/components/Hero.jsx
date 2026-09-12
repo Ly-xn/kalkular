@@ -20,16 +20,16 @@ export function Hero({ onStartCalculator }) {
 
         {/* Main Headline */}
         <h1 className="max-w-4xl text-3xl sm:text-5xl md:text-6xl font-black leading-[1.08] tracking-tight text-slate-900 dark:text-white">
-          ¿Cuánto cuesta pintar tu casa?
+          ¿Cuánto te pueden cobrar por pintar tu casa?
           <br />
           <span className="bg-gradient-to-r from-[#ff7d1a] via-[#ff6a00] to-[#fbbf24] bg-clip-text text-transparent drop-shadow-sm">
-            Presupuesto y Materiales al Instante
+            Calculá tu presupuesto en minutos.
           </span>
         </h1>
 
         {/* Subtitle enfocado en Marketing/SEO */}
         <p className="mt-5 max-w-2xl text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-          Evitá sobreprecios. Calculá en segundos el costo real de <strong className="text-slate-900 dark:text-white font-semibold">mano de obra por m²</strong> y recibí la lista exacta de pintura, rodillos y enduido para pedir con descuento en <span className="text-amber-500 dark:text-[#ffe600] font-bold">Mercado Libre</span>.
+          Evitá sobreprecios. Calculá en segundos el costo real de <strong className="text-slate-900 dark:text-white font-semibold">mano de obra por m²</strong> y recibí la lista de materiales que vas a necesitar con descuento en <span className="text-amber-500 dark:text-[#ffe600] font-bold">Mercado Libre</span>.
         </p>
 
         {/* CTAs */}
