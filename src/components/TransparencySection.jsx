@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Calculator, CheckCircle2, TrendingUp, HelpCircle, Layers, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Calculator, TrendingUp, Layers } from 'lucide-react';
 
 export function TransparencySection() {
   return (

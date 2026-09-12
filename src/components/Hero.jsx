@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles, CheckCircle2, ShieldCheck, ShoppingBag, Clock, TrendingUp } from 'lucide-react';
+import { ArrowRight, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export function Hero({ onStartCalculator }) {
   return (

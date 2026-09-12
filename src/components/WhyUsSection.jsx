@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Sparkles, ShoppingBag, FileText, CheckCircle2, ThumbsUp, Check } from 'lucide-react';
+import { Shield, Sparkles, ShoppingBag, FileText, Check } from 'lucide-react';
 
 export function WhyUsSection() {
   const reasons = [

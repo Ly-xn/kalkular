@@ -37,7 +37,7 @@ export function Navbar({ onOpenCalculator, onReset, theme, onToggleTheme }) {
 
   return (
     <nav className="fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 md:px-6 md:pt-4 transition-all duration-300">
-      <div className="dock-pill relative w-full max-w-6xl rounded-2xl md:rounded-3xl">
+      <div className={`dock-pill relative w-full max-w-6xl rounded-2xl md:rounded-3xl ${scrolled ? 'shadow-xl backdrop-blur-xl' : ''}`}>
         <div className="relative flex h-16 items-center justify-between px-3 md:px-5">
           {/* Logo con función de reset al estado inicial */}
           <button

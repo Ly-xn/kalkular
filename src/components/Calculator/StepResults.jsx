@@ -8,17 +8,11 @@ import {
   Share2, 
   Clock, 
   Users, 
-  Calendar, 
-  Sparkles, 
   RotateCcw, 
-  HelpCircle, 
-  TrendingUp, 
-  ArrowRight,
-  FileText,
   Palette
 } from 'lucide-react';
 
-export function StepResults({ quoteData, onReset, onEditInputs }) {
+export function StepResults({ quoteData, onEditInputs }) {
   const [currencyMode, setCurrencyMode] = useState('ARS'); // 'ARS' | 'USD'
   const usdRate = 1250;
 
@@ -31,7 +25,7 @@ export function StepResults({ quoteData, onReset, onEditInputs }) {
         origin: { y: 0.6 },
         colors: ['#ff6a00', '#f97316', '#ffe600', '#ffffff']
       });
-    } catch (e) {
+    } catch {
       // Ignore if confetti fails
     }
   }, []);

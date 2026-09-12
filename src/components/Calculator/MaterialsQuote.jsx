@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingCart, ExternalLink, Star, CheckCircle, Package, Shield, Sparkles } from 'lucide-react';
+import { ShoppingCart, ExternalLink, Star, CheckCircle, Shield } from 'lucide-react';
 import {
   getProductIcon,
   Latex20LIcon,

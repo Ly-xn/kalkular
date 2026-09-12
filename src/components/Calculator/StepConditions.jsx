@@ -9,7 +9,6 @@ import {
   ArrowLeft, 
   ArrowRight, 
   ShoppingBag, 
-  HardHat, 
   Building2, 
   PackageCheck 
 } from 'lucide-react';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, HelpCircle, Sparkles } from 'lucide-react';
+import { ChevronDown, HelpCircle } from 'lucide-react';
 
 export function FaqSection() {
   const [openIndex, setOpenIndex] = useState(0); // Primera abierta por defecto

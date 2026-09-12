@@ -3,7 +3,7 @@ import { calculateQuote } from '../../utils/calculateQuote.js';
 import { StepRooms } from './StepRooms.jsx';
 import { StepConditions } from './StepConditions.jsx';
 import { StepResults } from './StepResults.jsx';
-import { Ruler, AlertCircle, FileCheck, Sparkles, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 export function CalculatorWizard() {
   const wizardRef = useRef(null);

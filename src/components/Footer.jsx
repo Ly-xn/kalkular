@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paintbrush, Heart, ShieldAlert, ArrowUp } from 'lucide-react';
+import { Paintbrush, ArrowUp } from 'lucide-react';
 
 export function Footer({ onOpenCalculator, onReset }) {
   const scrollToTop = () => {

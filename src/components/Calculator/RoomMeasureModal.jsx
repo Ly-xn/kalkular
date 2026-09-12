@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { X, Ruler, Check, Info, Minus, Plus } from 'lucide-react';
 
 export function RoomMeasureModal({ isOpen, onClose, onApplyMeasurements, initialValues }) {
-  if (!isOpen) return null;
-
   const [length, setLength] = useState(initialValues?.length || 4);
   const [width, setWidth] = useState(initialValues?.width || 3.5);
   const [height, setHeight] = useState(initialValues?.height || 2.5);
   const [doors, setDoors] = useState(1);
   const [windows, setWindows] = useState(1);
+
+  if (!isOpen) return null;
 
   // Cálculos en tiempo real
   const perimeter = 2 * (parseFloat(length) + parseFloat(width));
