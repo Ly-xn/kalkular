@@ -35,6 +35,7 @@ export function Hero({ onStartCalculator }) {
         {/* CTAs */}
         <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:flex-row sm:justify-center">
           <button
+            id="btn-calcular-presupuesto"
             onClick={onStartCalculator}
             className="flex h-13 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#ff6a00] to-[#ea580c] px-7 text-sm font-extrabold text-white shadow-[0_0_30px_-5px_rgba(255,106,0,0.5)] transition-all hover:scale-[1.03] hover:shadow-[0_0_35px_-3px_rgba(255,106,0,0.7)] active:scale-[0.98] cursor-pointer"
           >

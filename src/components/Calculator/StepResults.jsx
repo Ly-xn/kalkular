@@ -248,6 +248,7 @@ export function StepResults({ quoteData, onEditInputs }) {
         {/* Botones de Acción: Descargar PDF & Compartir WhatsApp */}
         <div className="pt-6 border-t border-slate-200 dark:border-white/10 flex flex-col sm:flex-row gap-3">
           <button
+            id="btn-descargar-pdf"
             onClick={handleDownloadPdf}
             className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border border-slate-200 dark:border-white/15 py-3.5 text-xs md:text-sm font-bold text-slate-800 dark:text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
@@ -256,6 +257,7 @@ export function StepResults({ quoteData, onEditInputs }) {
           </button>
 
           <button
+            id="btn-compartir-whatsapp"
             onClick={handleShareWhatsApp}
             className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 hover:bg-emerald-500 py-3.5 text-xs md:text-sm font-bold text-white shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
