@@ -1,10 +1,14 @@
 import { AFFILIATES_CONFIG } from '../config/affiliates.config.js';
-import { PRICING_CONFIG } from '../config/pricing.config.js';
+import { PRICING_CONFIG, REJAS_PRICING_CONFIG } from '../config/pricing.config.js';
 
 /**
  * Motor de cálculo de presupuestos de pintura y materiales
  */
 export function calculateQuote(inputs) {
+  if (inputs && inputs.jobCategory === 'rejas') {
+    return calculateRejasQuote(inputs);
+  }
+
   const {
     roomType = 'room_medium',
     useManualM2 = false,
@@ -16,7 +20,7 @@ export function calculateQuote(inputs) {
     paintCeiling = true,
     selectedConditions = [], // array of condition ids
     materialsBuyer = 'client' // 'client' | 'painter'
-  } = inputs;
+  } = inputs || {};
 
   // 1. Cálculo de Metros Cuadrados
   let wallM2 = 0;
@@ -359,3 +363,330 @@ function optimizeCeilingContainers(liters) {
     };
   }
 }
+
+/**
+ * Motor de cálculo especializado para Rejas, Portones y Herrería
+ */
+function calculateRejasQuote(inputs) {
+  const {
+    rejaType = 'standard_window',
+    rejaQuantity = 1,
+    rejaLength = 10,
+    rejaHeight = 1.2,
+    rejaWidth = 2.0,
+    useManualRejaM2 = false,
+    manualRejaM2 = 4,
+    rejaRust = 'light',
+    rejaDesign = 'straight',
+    rejaEnvironments = [],
+    materialsBuyer = 'client'
+  } = inputs || {};
+
+  const { modalities, difficultySurcharges, yields, materialEstimatedPrices } = REJAS_PRICING_CONFIG;
+
+  let baseLabor = 0;
+  let linearMeters = 0;
+  let areaM2 = 0;
+  let roomLabel = 'Herrería';
+
+  if (rejaType === 'perimeter_fence') {
+    // Modalidad A: Metro Lineal
+    linearMeters = Math.max(1, parseFloat(rejaLength) || 10);
+    const h = Math.max(0.4, parseFloat(rejaHeight) || 1.2);
+    // Factor de altura (>1.5m)
+    const heightFactor = h > 1.5 ? Math.min(1.5, 1 + (h - 1.5) * 0.4) : 1.0;
+    const rate = modalities.linearMeter.rates.maintenance.recommended;
+    baseLabor = Math.round(linearMeters * rate * heightFactor);
+    areaM2 = Math.round(linearMeters * h * 10) / 10;
+    roomLabel = `Reja Perimetral (${linearMeters} ml, ${h}m alto)`;
+  } else if (rejaType === 'custom_grille') {
+    // Modalidad B: Lleno por Vacío m2
+    if (useManualRejaM2) {
+      areaM2 = Math.max(0.5, parseFloat(manualRejaM2) || 4);
+      linearMeters = Math.round(areaM2 * 1.5 * 10) / 10;
+      roomLabel = `Herrería a Medida (${areaM2} m² vano completo)`;
+    } else {
+      const w = Math.max(0.5, parseFloat(rejaWidth) || 2.0);
+      const h = Math.max(0.5, parseFloat(rejaHeight) || 2.0);
+      areaM2 = Math.round(w * h * 10) / 10;
+      linearMeters = Math.round(areaM2 * 1.5 * 10) / 10;
+      roomLabel = `Herrería / Portón (${w}m x ${h}m = ${areaM2} m²)`;
+    }
+    const rate = modalities.fullVoidM2.rates.standardBars.recommended;
+    baseLabor = Math.round(areaM2 * rate);
+  } else {
+    // Modalidad C: Unidad Fija Estandarizada
+    const preset = modalities.fixedUnits.find(u => u.id === rejaType) || modalities.fixedUnits[0];
+    const qty = Math.max(1, parseInt(rejaQuantity) || 1);
+    baseLabor = preset.recommendedPrice * qty;
+    areaM2 = Math.round((preset.areaM2 || 1.8) * qty * 10) / 10;
+    linearMeters = Math.round((preset.linearMetersEquiv || 3.5) * qty * 10) / 10;
+    roomLabel = `${preset.name} (${qty} ${qty === 1 ? 'unidad' : 'unidades'})`;
+  }
+
+  // Recargos acumulados por dificultad
+  let percentSurchargeTotal = 0;
+  const activeConditionsDetails = [];
+
+  // 1. Estado del óxido
+  const rustCfg = difficultySurcharges.rustState[rejaRust];
+  if (rustCfg) {
+    if (rustCfg.percent > 0) {
+      percentSurchargeTotal += rustCfg.percent;
+    }
+    activeConditionsDetails.push({
+      ...rustCfg,
+      categoryName: 'Estado del Óxido'
+    });
+  }
+
+  // 2. Complejidad del diseño
+  const designCfg = difficultySurcharges.designComplexity[rejaDesign];
+  if (designCfg) {
+    if (designCfg.percent > 0) {
+      percentSurchargeTotal += designCfg.percent;
+    }
+    activeConditionsDetails.push({
+      ...designCfg,
+      categoryName: 'Diseño de Herrería'
+    });
+  }
+
+  // 3. Entorno y accesibilidad
+  const envList = Array.isArray(rejaEnvironments) ? rejaEnvironments : [rejaEnvironments].filter(Boolean);
+  envList.forEach(envId => {
+    const envCfg = difficultySurcharges.environment[envId];
+    if (envCfg) {
+      if (envCfg.percent > 0) {
+        percentSurchargeTotal += envCfg.percent;
+      }
+      activeConditionsDetails.push({
+        ...envCfg,
+        categoryName: 'Accesibilidad'
+      });
+    }
+  });
+
+  const conditionSurchargesTotal = Math.round(baseLabor * percentSurchargeTotal);
+  const recommendedLabor = Math.round(baseLabor + conditionSurchargesTotal);
+  const minLabor = Math.round(recommendedLabor * 0.82);
+  const maxLabor = Math.round(recommendedLabor * 1.25);
+
+  // Estimación de tiempo (Días hábiles)
+  // 5 a 6 metros lineales o 3 m2 por jornada de oficial pintor
+  const baseDays = Math.ceil(linearMeters / 6);
+  const rustDaysExtra = rejaRust === 'heavy' ? 1.5 : (rejaRust === 'medium' ? 0.5 : 0);
+  const estimatedDays = Math.max(1, Math.round(baseDays + rustDaysExtra));
+  const workforceAdvice = estimatedDays >= 3 ? '1 a 2 Oficiales especializados' : '1 Oficial pintor especialista';
+
+  // Rendimientos y cálculo de materiales
+  const rawEnamelLiters = linearMeters / yields.enamelLinearMetersPerLiter2Coats;
+  const enamelLiters = Math.max(1, Math.ceil(rawEnamelLiters));
+
+  // Envases de Esmalte 3 en 1
+  let cans4L = 0;
+  let cans1L = 0;
+  if (enamelLiters >= 3) {
+    cans4L = Math.floor(enamelLiters / 4);
+    const rem = enamelLiters % 4;
+    if (rem >= 3) {
+      cans4L += 1;
+    } else if (rem > 0) {
+      cans1L = rem;
+    }
+    if (cans4L === 0 && cans1L === 0) cans4L = 1;
+  } else {
+    cans1L = enamelLiters;
+  }
+
+  const enamelParts = [];
+  if (cans4L > 0) enamelParts.push(`${cans4L} Lata${cans4L > 1 ? 's' : ''} de 4L`);
+  if (cans1L > 0) enamelParts.push(`${cans1L} Lata${cans1L > 1 ? 's' : ''} de 1L`);
+  const enamelDescription = enamelParts.join(' + ') || `${cans1L} Lata de 1L`;
+
+  // Aguarrás
+  const aguarrasLiters = Math.max(1, Math.ceil(enamelLiters * yields.thinnerLitersPerEnamelLiter));
+
+  // Convertidor y Desoxidante
+  const needsConvertidor = rejaRust === 'medium' || rejaRust === 'heavy';
+  const convertidorLiters = needsConvertidor ? Math.max(1, Math.ceil(enamelLiters * 0.5)) : 0;
+
+  const needsDesoxidante = rejaRust === 'heavy';
+  const desoxidanteLiters = needsDesoxidante ? 1 : 0;
+
+  // Lijas tela esmeril
+  const lijaSheets = Math.max(2, Math.ceil(linearMeters * yields.sandpaperSheetsPerLinearMeter) + (rejaRust === 'heavy' ? 2 : 0));
+
+  // Cepillo de alambre
+  const needsCepillo = rejaRust === 'medium' || rejaRust === 'heavy';
+
+  // Cinta de enmascarar
+  const needsCinta = envList.includes('tightGlassAccess') || ['standard_window', 'balcony_window'].includes(rejaType);
+  const cintaRolls = needsCinta ? 1 : 0;
+
+  // Costo total de materiales
+  let materialsCostEstimate = 0;
+  materialsCostEstimate += cans4L * materialEstimatedPrices.enamel3in1_4L;
+  materialsCostEstimate += cans1L * materialEstimatedPrices.enamel3in1_1L;
+  materialsCostEstimate += aguarrasLiters * materialEstimatedPrices.aguarras1L;
+  if (needsConvertidor) materialsCostEstimate += convertidorLiters * materialEstimatedPrices.convertidor1L;
+  if (needsDesoxidante) materialsCostEstimate += desoxidanteLiters * materialEstimatedPrices.desoxidante1L;
+  materialsCostEstimate += lijaSheets * materialEstimatedPrices.telaEsmerilHoja;
+  if (needsCepillo) materialsCostEstimate += materialEstimatedPrices.cepilloAlambre;
+  materialsCostEstimate += materialEstimatedPrices.pincelCerdaMetal;
+  if (cintaRolls > 0) materialsCostEstimate += cintaRolls * materialEstimatedPrices.cintaPintor24mm;
+
+  // Lista recomendada para Mercado Libre
+  const recommendedMaterialsList = [];
+
+  if (cans4L > 0) {
+    const prod = AFFILIATES_CONFIG.products.esmalte3en1_4L;
+    recommendedMaterialsList.push({
+      ...prod,
+      quantityLabel: `${cans4L} Lata${cans4L > 1 ? 's' : ''} de 4 Litros (Esmalte 3 en 1)`,
+      calculatedQty: cans4L,
+      affiliateUrl: prod.affiliateUrl || AFFILIATES_CONFIG.generateAffiliateSearchUrl('esmalte sintetico 3 en 1 4 litros albalux tersuave')
+    });
+  }
+
+  if (cans1L > 0) {
+    const prod = AFFILIATES_CONFIG.products.esmalte3en1_1L;
+    recommendedMaterialsList.push({
+      ...prod,
+      quantityLabel: `${cans1L} Lata${cans1L > 1 ? 's' : ''} de 1 Litro (Esmalte 3 en 1)`,
+      calculatedQty: cans1L,
+      affiliateUrl: prod.affiliateUrl || AFFILIATES_CONFIG.generateAffiliateSearchUrl('esmalte sintetico 3 en 1 1 litro')
+    });
+  }
+
+  const aguarrasProd = AFFILIATES_CONFIG.products.aguarrasMineral1L;
+  recommendedMaterialsList.push({
+    ...aguarrasProd,
+    quantityLabel: `${aguarrasLiters} Botella${aguarrasLiters > 1 ? 's' : ''} de 1 Litro (Solvente puro)`,
+    calculatedQty: aguarrasLiters,
+    affiliateUrl: aguarrasProd.affiliateUrl || AFFILIATES_CONFIG.generateAffiliateSearchUrl('aguarras mineral 1 litro puro')
+  });
+
+  if (needsConvertidor) {
+    const convProd = AFFILIATES_CONFIG.products.convertidorOxido1L;
+    recommendedMaterialsList.push({
+      ...convProd,
+      quantityLabel: `${convertidorLiters} Lata${convertidorLiters > 1 ? 's' : ''} de 1 Litro (Fondo convertidor)`,
+      calculatedQty: convertidorLiters,
+      affiliateUrl: convProd.affiliateUrl || AFFILIATES_CONFIG.generateAffiliateSearchUrl('convertidor de oxido 1 litro')
+    });
+  }
+
+  if (needsDesoxidante) {
+    const desoxProd = AFFILIATES_CONFIG.products.desoxidanteFosfatizante1L;
+    recommendedMaterialsList.push({
+      ...desoxProd,
+      quantityLabel: '1 Botella de 1 Litro (Neutralizador químico fosfatizante)',
+      calculatedQty: 1,
+      affiliateUrl: desoxProd.affiliateUrl || AFFILIATES_CONFIG.generateAffiliateSearchUrl('desoxidante fosfatizante 1 litro')
+    });
+  }
+
+  if (needsCepillo) {
+    const cepilloProd = AFFILIATES_CONFIG.products.cepilloAlambre;
+    recommendedMaterialsList.push({
+      ...cepilloProd,
+      quantityLabel: '1 Cepillo de alambre de acero con mango',
+      calculatedQty: 1,
+      affiliateUrl: cepilloProd.affiliateUrl || AFFILIATES_CONFIG.generateAffiliateSearchUrl('cepillo de alambre de acero manual')
+    });
+  }
+
+  const lijaProd = AFFILIATES_CONFIG.products.lijasTelaEsmeril;
+  recommendedMaterialsList.push({
+    ...lijaProd,
+    quantityLabel: `${lijaSheets} Pliegos de tela esmeril para metal (G80 y G150)`,
+    calculatedQty: lijaSheets,
+    affiliateUrl: lijaProd.affiliateUrl || AFFILIATES_CONFIG.generateAffiliateSearchUrl('lija tela esmeril metal')
+  });
+
+  const pincelProd = AFFILIATES_CONFIG.products.pincelCerdaMetal;
+  recommendedMaterialsList.push({
+    ...pincelProd,
+    quantityLabel: '1 Pincel de cerda virola 1 (1½" o 2") para herrería',
+    calculatedQty: 1,
+    affiliateUrl: pincelProd.affiliateUrl || AFFILIATES_CONFIG.generateAffiliateSearchUrl('pincel cerda virola 1')
+  });
+
+  if (cintaRolls > 0) {
+    const cintaProd = AFFILIATES_CONFIG.products.cintaEnmascarar;
+    recommendedMaterialsList.push({
+      ...cintaProd,
+      quantityLabel: '1 Rollo de cinta de enmascarar (Protección vidrio/pared)',
+      calculatedQty: 1,
+      affiliateUrl: cintaProd.affiliateUrl || AFFILIATES_CONFIG.generateAffiliateSearchUrl('cinta de enmascarar de papel pintor 24mm')
+    });
+  }
+
+  return {
+    jobCategory: 'rejas',
+    surfaces: {
+      wallM2: 0,
+      ceilingM2: 0,
+      totalM2: areaM2,
+      linearMeters,
+      areaM2,
+      openingsDeductionM2: 0,
+      isRejas: true,
+      rejaUnitLabel: roomLabel,
+    },
+    labor: {
+      min: minLabor,
+      recommended: recommendedLabor,
+      max: maxLabor,
+      baseWallLabor: baseLabor,
+      baseCeilingLabor: 0,
+      conditionSurchargesTotal,
+      estimatedDays,
+      workforceAdvice,
+    },
+    materials: {
+      estimatedCost: materialsCostEstimate,
+      latexWallLiters: enamelLiters,
+      latexCeilingLiters: 0,
+      enamelLiters,
+      enamelContainersDescription: enamelDescription,
+      aguarrasLiters,
+      fijadorLiters: 0,
+      enduidoKg: 0,
+      lijaSheets,
+      cintaRolls,
+      plasticoRolls: 0,
+      itemsList: recommendedMaterialsList,
+      wallPaintContainers: {
+        description: `${enamelDescription} (Esmalte 3 en 1)`,
+        estimatedCost: (cans4L * materialEstimatedPrices.enamel3in1_4L) + (cans1L * materialEstimatedPrices.enamel3in1_1L)
+      },
+      ceilingPaintContainers: {
+        description: 'No aplica en herrería',
+        estimatedCost: 0
+      }
+    },
+    combinedTotal: {
+      min: minLabor + (materialsBuyer === 'client' ? 0 : materialsCostEstimate),
+      recommended: recommendedLabor + materialsCostEstimate,
+      max: maxLabor + Math.round(materialsCostEstimate * 1.15),
+    },
+    meta: {
+      jobCategory: 'rejas',
+      materialsBuyer,
+      activeConditionsDetails,
+      dateCalculated: new Date().toLocaleDateString('es-AR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      }),
+      roomLabel,
+      rejaRust,
+      rejaDesign,
+      rejaEnvironments: envList,
+      isMetalwork: true,
+    }
+  };
+}
+

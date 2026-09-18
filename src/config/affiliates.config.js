@@ -165,6 +165,126 @@ export const AFFILIATES_CONFIG = {
       category: 'Protección',
       affiliateUrl: 'https://meli.la/2eQvYLk',
       image: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&auto=format&fit=crop&q=80'
+    },
+
+    // 11. Esmalte Sintético 3 en 1 (4 Litros)
+    esmalte3en1_4L: {
+      id: 'esmalte3en1_4L',
+      name: 'Esmalte Sintético 3 en 1 (4 Litros)',
+      brand: 'Alba (Albalux) / Tersuave / Sinteplast',
+      tagline: 'Antióxido + Convertidor + Terminación brillante o satinada en un solo producto',
+      rating: 4.9,
+      reviewsCount: 2840,
+      estimatedPrice: '$65.000 - $95.000',
+      badge: '3 en 1 🛡️',
+      category: 'Pintura Herrería',
+      affiliateUrl: 'https://meli.la/1ZHeqqu',
+      image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&auto=format&fit=crop&q=80'
+    },
+
+    // 12. Esmalte Sintético 3 en 1 (1 Litro)
+    esmalte3en1_1L: {
+      id: 'esmalte3en1_1L',
+      name: 'Esmalte Sintético 3 en 1 (1 Litro)',
+      brand: 'Alba / Tersuave / Sinteplast',
+      tagline: 'Ideal para rejas de ventana, puertas o mantenimiento puntual (Rinde 5 ml)',
+      rating: 4.8,
+      reviewsCount: 1950,
+      estimatedPrice: '$19.000 - $27.000',
+      badge: 'Rinde 5 ml',
+      category: 'Pintura Herrería',
+      affiliateUrl: 'https://meli.la/16zTFQy',
+      image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&auto=format&fit=crop&q=80'
+    },
+
+    // 13. Convertidor de Óxido / Antióxido (1 Litro)
+    convertidorOxido1L: {
+      id: 'convertidorOxido1L',
+      name: 'Convertidor de Óxido / Antióxido (1 Litro)',
+      brand: 'Colorín / Sinteplast / Alba',
+      tagline: 'Inactiva el óxido existente y detiene el avance de la corrosión en metales',
+      rating: 4.8,
+      reviewsCount: 1340,
+      estimatedPrice: '$14.000 - $22.000',
+      badge: 'Anticorrosivo',
+      category: 'Fondo y Protección',
+      affiliateUrl: 'https://meli.la/1aYR9dV',
+      image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&auto=format&fit=crop&q=80'
+    },
+
+    // 14. Desoxidante Fosfatizante (1 Litro)
+    desoxidanteFosfatizante1L: {
+      id: 'desoxidanteFosfatizante1L',
+      name: 'Desoxidante Fosfatizante Pasivador (1 Litro)',
+      brand: 'Venier / Tersuave / Sinteplast',
+      tagline: 'Neutralizador químico indispensable para remover óxido severo y dejar mordiente',
+      rating: 4.7,
+      reviewsCount: 820,
+      estimatedPrice: '$9.000 - $17.000',
+      badge: 'Tratamiento Químico',
+      category: 'Preparación Metal',
+      affiliateUrl: 'https://meli.la/1CLwync',
+      image: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&auto=format&fit=crop&q=80'
+    },
+
+    // 15. Aguarrás Mineral de Primera Calidad (1 Litro)
+    aguarrasMineral1L: {
+      id: 'aguarrasMineral1L',
+      name: 'Aguarrás Mineral Puro (1 Litro)',
+      brand: 'Doble A / Solvente Puro',
+      tagline: 'Para desengrase inicial de metales, dilución de esmalte sintético y limpieza de pinceles',
+      rating: 4.8,
+      reviewsCount: 1150,
+      estimatedPrice: '$7.000 - $12.000',
+      badge: 'Solvente Puro',
+      category: 'Dilución y Limpieza',
+      affiliateUrl: 'https://meli.la/1GhJdRD',
+      image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&auto=format&fit=crop&q=80'
+    },
+
+    // 16. Cepillo de Alambre de Acero
+    cepilloAlambre: {
+      id: 'cepilloAlambre',
+      name: 'Cepillo de Alambre de Acero (Mango Madera)',
+      brand: 'Gobernador / BlackJack / Bremen',
+      tagline: 'Cerdas de alambre templado para rasquetear esquinas, soldaduras y óxido escamado',
+      rating: 4.7,
+      reviewsCount: 940,
+      estimatedPrice: '$3.500 - $6.000',
+      badge: 'Desoxidado',
+      category: 'Herramientas Herrería',
+      affiliateUrl: 'https://meli.la/32MnN8F',
+      image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&auto=format&fit=crop&q=80'
+    },
+
+    // 17. Lijas para Metal Tela Esmeril
+    lijasTelaEsmeril: {
+      id: 'lijasTelaEsmeril',
+      name: 'Lijas Tela Esmeril para Metal (Pack x 5)',
+      brand: 'Norton / Doble A',
+      tagline: 'Soporte de tela ultra resistente granos 80 (desbaste) y 150 (terminación suave)',
+      rating: 4.9,
+      reviewsCount: 1210,
+      estimatedPrice: '$4.500 - $7.500',
+      badge: 'Tela Esmeril',
+      category: 'Insumos Metal',
+      affiliateUrl: 'https://meli.la/2f9gvq5',
+      image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&auto=format&fit=crop&q=80'
+    },
+
+    // 18. Pincel Cerda Pura Virola 1 (1½" o 2")
+    pincelCerdaMetal: {
+      id: 'pincelCerdaMetal',
+      name: 'Pincel Cerda Pura Virola 1 (Nº 15 / Nº 20)',
+      brand: 'El Galgo / Rucar',
+      tagline: 'Cerdas flexibles para cubrir las 4 caras del barrote y soldaduras sin chorrear',
+      rating: 4.8,
+      reviewsCount: 1680,
+      estimatedPrice: '$4.500 - $8.500',
+      badge: 'Aplicación Herrería',
+      category: 'Herramientas',
+      affiliateUrl: 'https://meli.la/2TLWDku',
+      image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&auto=format&fit=crop&q=80'
     }
   }
 };

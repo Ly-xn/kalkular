@@ -5,11 +5,16 @@ import {
   Latex20LIcon,
   LatexCeilingIcon,
   EnduidoPlasticoIcon,
-  KitPintorIcon
+  KitPintorIcon,
+  Esmalte3en1Icon,
+  AguarrasMineralIcon,
+  LijasTelaEsmerilIcon,
+  PincelCerdaMetalIcon
 } from './ProductIcons';
 
 export function MaterialsQuote({ quoteData }) {
-  const { materials, surfaces } = quoteData;
+  const { materials, surfaces, meta } = quoteData;
+  const isRejas = meta?.jobCategory === 'rejas';
 
   return (
     <section id="materiales" className="mt-14 pt-12 border-t border-slate-200 dark:border-white/10 space-y-10 animate-fade-in transition-colors">
@@ -25,7 +30,9 @@ export function MaterialsQuote({ quoteData }) {
             Materiales Recomendados para tu Obra
           </h3>
           <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-2xl leading-relaxed">
-            Calculamos las cantidades exactas para pintar <strong className="text-slate-900 dark:text-white font-bold">{surfaces.totalM2} m²</strong> (2 manos completas). Comprá directo por Mercado Libre y recibí todo en tu puerta.
+            {isRejas
+              ? `Calculamos las cantidades exactas para pintar ${surfaces.linearMeters} metros lineales aprox. (${surfaces.totalM2} m² lleno por vacío a 2 manos). Comprá directo por Mercado Libre y recibí todo en tu puerta.`
+              : `Calculamos las cantidades exactas para pintar ${surfaces.totalM2} m² (2 manos completas). Comprá directo por Mercado Libre y recibí todo en tu puerta.`}
           </p>
         </div>
 
@@ -40,55 +47,103 @@ export function MaterialsQuote({ quoteData }) {
       </div>
 
       {/* Resumen Rápido de Insumos con Iconos */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-[#ff6a00]/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
-          <div className="w-11 h-11 rounded-xl bg-[#ff6a00]/15 border border-[#ff6a00]/30 p-2 flex items-center justify-center text-[#ea580c] dark:text-[#ff7d1a] flex-shrink-0">
-            <Latex20LIcon className="w-full h-full" />
+      {isRejas ? (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-[#ff6a00]/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
+            <div className="w-11 h-11 rounded-xl bg-[#ff6a00]/15 border border-[#ff6a00]/30 p-2 flex items-center justify-center text-[#ea580c] dark:text-[#ff7d1a] flex-shrink-0">
+              <Esmalte3en1Icon className="w-full h-full" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Esmalte 3 en 1</p>
+              <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">{materials.enamelContainersDescription || materials.wallPaintContainers.description}</p>
+              <span className="text-[10px] text-[#ea580c] dark:text-[#ff7d1a] font-semibold">~{materials.enamelLiters || materials.latexWallLiters}L netos</span>
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Látex Paredes</p>
-            <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">{materials.wallPaintContainers.description}</p>
-            <span className="text-[10px] text-[#ea580c] dark:text-[#ff7d1a] font-semibold">~{materials.latexWallLiters}L netos</span>
+
+          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-sky-400/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
+            <div className="w-11 h-11 rounded-xl bg-sky-400/15 border border-sky-400/30 p-2 flex items-center justify-center text-sky-600 dark:text-sky-400 flex-shrink-0">
+              <AguarrasMineralIcon className="w-full h-full" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Solvente</p>
+              <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">{materials.aguarrasLiters || 1}L Aguarrás</p>
+              <span className="text-[10px] text-sky-600 dark:text-sky-400 font-semibold">Desengrase y dilución</span>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-[#ff6a00]/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
+            <div className="w-11 h-11 rounded-xl bg-[#ff6a00]/15 border border-[#ff6a00]/30 p-2 flex items-center justify-center text-[#ea580c] dark:text-[#ff7d1a] flex-shrink-0">
+              <LijasTelaEsmerilIcon className="w-full h-full" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Desoxidado</p>
+              <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">{materials.lijaSheets} telas esmeril</p>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">Cepillo + lija metal</span>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-yellow-400/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
+            <div className="w-11 h-11 rounded-xl bg-amber-400/15 border border-amber-400/30 p-2 flex items-center justify-center text-amber-600 dark:text-yellow-300 flex-shrink-0">
+              <PincelCerdaMetalIcon className="w-full h-full" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Aplicación</p>
+              <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">1 Pincel Herrería</p>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">Virola 1 cerda pura</span>
+            </div>
           </div>
         </div>
-
-        <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-emerald-400/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
-          <div className="w-11 h-11 rounded-xl bg-emerald-400/15 border border-emerald-400/30 p-2 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0">
-            <LatexCeilingIcon className="w-full h-full" />
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-[#ff6a00]/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
+            <div className="w-11 h-11 rounded-xl bg-[#ff6a00]/15 border border-[#ff6a00]/30 p-2 flex items-center justify-center text-[#ea580c] dark:text-[#ff7d1a] flex-shrink-0">
+              <Latex20LIcon className="w-full h-full" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Látex Paredes</p>
+              <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">{materials.wallPaintContainers.description}</p>
+              <span className="text-[10px] text-[#ea580c] dark:text-[#ff7d1a] font-semibold">~{materials.latexWallLiters}L netos</span>
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Cielorraso</p>
-            <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">{materials.ceilingPaintContainers.description}</p>
-            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Antihongo Mate</span>
+
+          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-emerald-400/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
+            <div className="w-11 h-11 rounded-xl bg-emerald-400/15 border border-emerald-400/30 p-2 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0">
+              <LatexCeilingIcon className="w-full h-full" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Cielorraso</p>
+              <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">{materials.ceilingPaintContainers.description}</p>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Antihongo Mate</span>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-[#ff6a00]/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
+            <div className="w-11 h-11 rounded-xl bg-[#ff6a00]/15 border border-[#ff6a00]/30 p-2 flex items-center justify-center text-[#ea580c] dark:text-[#ff7d1a] flex-shrink-0">
+              <EnduidoPlasticoIcon className="w-full h-full" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Preparación</p>
+              <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">
+                {materials.enduidoKg > 0 ? `${materials.enduidoKg} kg Enduido` : 'Superficie Lista'}
+              </p>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">{materials.lijaSheets} pliegos lija</span>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-yellow-400/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
+            <div className="w-11 h-11 rounded-xl bg-amber-400/15 border border-amber-400/30 p-2 flex items-center justify-center text-amber-600 dark:text-yellow-300 flex-shrink-0">
+              <KitPintorIcon className="w-full h-full" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Kit Pintor</p>
+              <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">1 Kit Completo</p>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">{materials.cintaRolls} rollos + plástico</span>
+            </div>
           </div>
         </div>
+      )}
 
-        <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-[#ff6a00]/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
-          <div className="w-11 h-11 rounded-xl bg-[#ff6a00]/15 border border-[#ff6a00]/30 p-2 flex items-center justify-center text-[#ea580c] dark:text-[#ff7d1a] flex-shrink-0">
-            <EnduidoPlasticoIcon className="w-full h-full" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Preparación</p>
-            <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">
-              {materials.enduidoKg > 0 ? `${materials.enduidoKg} kg Enduido` : 'Superficie Lista'}
-            </p>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">{materials.lijaSheets} pliegos lija</span>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-4 flex items-center gap-3.5 transition-all shadow-sm dark:shadow-none hover:border-yellow-400/30 hover:bg-slate-50 dark:hover:bg-white/[0.05]">
-          <div className="w-11 h-11 rounded-xl bg-amber-400/15 border border-amber-400/30 p-2 flex items-center justify-center text-amber-600 dark:text-yellow-300 flex-shrink-0">
-            <KitPintorIcon className="w-full h-full" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Kit Pintor</p>
-            <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">1 Kit Completo</p>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">{materials.cintaRolls} rollos + plástico</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Grid del Catálogo de Productos con Iconos Vectoriales y Mayor Espaciado */}
+      {/* Grid del Catálogo de Productos con Iconos Vectoriales */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {materials.itemsList.map((item, index) => (
           <div
@@ -99,12 +154,10 @@ export function MaterialsQuote({ quoteData }) {
               
               {/* Header de la Card: Icono SVG + Categoría y Badge */}
               <div className="flex items-start gap-4">
-                {/* Contenedor del Icono Vectorial SVG */}
                 <div className="relative flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ff6a00]/10 dark:from-[#ff6a00]/20 via-slate-100 dark:via-white/[0.04] to-transparent border border-[#ff6a00]/20 dark:border-[#ff6a00]/30 p-2.5 flex items-center justify-center text-[#ea580c] dark:text-[#ff7d1a] shadow-inner group-hover:scale-105 group-hover:border-[#ff6a00]/60 transition-all duration-300">
                   {getProductIcon(item.id, "w-full h-full text-[#ff6a00]")}
                 </div>
 
-                {/* Título & Categoría */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
@@ -127,7 +180,7 @@ export function MaterialsQuote({ quoteData }) {
                 <span className="text-slate-700 dark:text-slate-200 font-medium">{item.brand}</span>
               </div>
 
-              {/* Cantidad Calculada para este usuario */}
+              {/* Cantidad Calculada */}
               <div className="rounded-2xl border border-[#ff6a00]/25 dark:border-[#ff6a00]/30 bg-orange-500/5 dark:bg-gradient-to-r dark:from-[#ff6a00]/15 dark:via-[#ff6a00]/10 dark:to-transparent p-3.5 shadow-sm">
                 <span className="text-[10px] uppercase font-black tracking-wider text-[#ea580c] dark:text-[#ff7d1a] block mb-1">
                   Cantidad calculada para tu espacio ({surfaces.totalM2} m²):
@@ -138,7 +191,7 @@ export function MaterialsQuote({ quoteData }) {
                 </p>
               </div>
 
-              {/* Tagline / Ventaja Técnica con buena legibilidad */}
+              {/* Tagline */}
               <p className="text-xs text-slate-600 dark:text-slate-300/90 leading-relaxed min-h-[38px] pt-1">
                 {item.tagline}
               </p>

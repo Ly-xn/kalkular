@@ -11,6 +11,8 @@ export function CalculatorWizard() {
   const [currentStep, setCurrentStep] = useState(1);
 
   const [inputs, setInputs] = useState({
+    jobCategory: 'walls', // 'walls' | 'rejas'
+    // Campos para paredes
     roomType: 'room_medium',
     useManualM2: false,
     manualM2: 35,
@@ -20,6 +22,18 @@ export function CalculatorWizard() {
     openingsDeductionM2: 3.5,
     paintCeiling: true,
     selectedConditions: ['minorCracks'], // por defecto pequeñas grietas habituales
+    // Campos para rejas y portones
+    rejaType: 'standard_window',
+    rejaQuantity: 1,
+    rejaLength: 10,
+    rejaHeight: 1.2,
+    rejaWidth: 2.0,
+    useManualRejaM2: false,
+    manualRejaM2: 4,
+    rejaRust: 'light', // 'light' | 'medium' | 'heavy'
+    rejaDesign: 'straight', // 'straight' | 'twistedOrMesh' | 'artisticColonial'
+    rejaEnvironments: [], // ['heightOrBalcony', 'tightGlassAccess']
+    // Común
     materialsBuyer: 'client', // por defecto el cliente compra en Mercado Libre
   });
 
@@ -43,10 +57,24 @@ export function CalculatorWizard() {
     scrollToWizard();
   };
 
+  const isRejas = inputs.jobCategory === 'rejas';
+
   const stepsHeader = [
-    { num: 1, title: 'Espacio y m²', desc: 'Ambiente o medidas' },
-    { num: 2, title: 'Estado de Paredes', desc: 'Dificultades y extras' },
-    { num: 3, title: 'Presupuesto Final', desc: 'Mano de obra y materiales' },
+    { 
+      num: 1, 
+      title: isRejas ? 'Herrería y Medidas' : 'Espacio y m²', 
+      desc: isRejas ? 'Abertura o metros lineales' : 'Ambiente o medidas' 
+    },
+    { 
+      num: 2, 
+      title: isRejas ? 'Estado de Reja o Portón' : 'Estado de Paredes', 
+      desc: isRejas ? 'Óxido, diseño y altura' : 'Dificultades y extras' 
+    },
+    { 
+      num: 3, 
+      title: 'Presupuesto Final', 
+      desc: isRejas ? 'Esmalte 3en1 y mano de obra' : 'Mano de obra y materiales' 
+    },
   ];
 
   return (

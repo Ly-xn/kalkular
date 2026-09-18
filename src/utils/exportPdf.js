@@ -10,6 +10,7 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
     format: 'a4'
   });
 
+  const isRejas = quoteData.meta?.jobCategory === 'rejas';
   const primaryOrange = [255, 106, 0];
   const darkBg = [15, 23, 42];
   const grayText = [100, 116, 139];
@@ -24,14 +25,14 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
 
   // Logo / Título
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(22);
+  doc.setFontSize(20);
   doc.setTextColor(255, 255, 255);
-  doc.text('PRESUPUESTO DE PINTURA', 15, 20);
+  doc.text(isRejas ? 'PRESUPUESTO HERRERÍA Y REJAS' : 'PRESUPUESTO DE PINTURA', 15, 20);
 
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(255, 180, 120);
-  doc.text('Calculadora Inteligente de Obra & Materiales', 15, 27);
+  doc.text(isRejas ? 'Tratamiento Anticorrosivo, Desoxidado & Esmalte 3 en 1' : 'Calculadora Inteligente de Obra & Materiales', 15, 27);
 
   // Metadata a la derecha
   doc.setFontSize(9);
@@ -46,7 +47,7 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(...darkBg);
-  doc.text('1. Detalle del Ambiente y Metros Cuadrados', 15, y);
+  doc.text(isRejas ? '1. Detalle de la Herrería y Dimensiones' : '1. Detalle del Ambiente y Metros Cuadrados', 15, y);
   y += 7;
 
   doc.setDrawColor(220, 226, 235);
@@ -57,20 +58,37 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(51, 65, 85);
 
-  doc.text(`Ambiente seleccionado:`, 20, y + 8);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`${quoteData.meta.roomLabel}`, 75, y + 8);
+  if (isRejas) {
+    doc.text(`Herrería seleccionada:`, 20, y + 8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${quoteData.meta.roomLabel}`, 75, y + 8);
 
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Superficie Paredes:`, 20, y + 16);
-  doc.text(`${quoteData.surfaces.wallM2} m² (2 manos)`, 75, y + 16);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Desarrollo lineal:`, 20, y + 16);
+    doc.text(`~${quoteData.surfaces.linearMeters} metros lineales (ml)`, 75, y + 16);
 
-  doc.text(`Superficie Cielorraso:`, 20, y + 23);
-  doc.text(`${quoteData.surfaces.ceilingM2 > 0 ? quoteData.surfaces.ceilingM2 + ' m²' : 'No incluido'}`, 75, y + 23);
+    doc.text(`Superficie vano:`, 20, y + 23);
+    doc.text(`${quoteData.surfaces.totalM2} m² (lleno por vacío a 2 manos)`, 75, y + 23);
 
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(...primaryOrange);
-  doc.text(`Superficie Total: ${quoteData.surfaces.totalM2} m²`, 130, y + 16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...primaryOrange);
+    doc.text(`Cómputo: ${quoteData.surfaces.totalM2} m²`, 135, y + 16);
+  } else {
+    doc.text(`Ambiente seleccionado:`, 20, y + 8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${quoteData.meta.roomLabel}`, 75, y + 8);
+
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Superficie Paredes:`, 20, y + 16);
+    doc.text(`${quoteData.surfaces.wallM2} m² (2 manos)`, 75, y + 16);
+
+    doc.text(`Superficie Cielorraso:`, 20, y + 23);
+    doc.text(`${quoteData.surfaces.ceilingM2 > 0 ? quoteData.surfaces.ceilingM2 + ' m²' : 'No incluido'}`, 75, y + 23);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...primaryOrange);
+    doc.text(`Superficie Total: ${quoteData.surfaces.totalM2} m²`, 130, y + 16);
+  }
 
   y += 38;
 
@@ -78,7 +96,7 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(...darkBg);
-  doc.text('2. Estimación de Mano de Obra Profesional', 15, y);
+  doc.text(isRejas ? '2. Estimación de Mano de Obra Especializada en Herrería' : '2. Estimación de Mano de Obra Profesional', 15, y);
   y += 7;
 
   doc.roundedRect(15, y, 180, 36, 2, 2, 'FD');
@@ -114,7 +132,7 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(...darkBg);
-  doc.text('3. Lista de Materiales e Insumos Sugeridos (Mercado Libre)', 15, y);
+  doc.text(isRejas ? '3. Materiales e Insumos para Herrería (Mercado Libre)' : '3. Lista de Materiales e Insumos Sugeridos (Mercado Libre)', 15, y);
   y += 6;
 
   // Tabla simple de materiales
@@ -164,7 +182,11 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   y += 4.5;
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(190, 90, 10);
-  doc.text('• AVISO DE COLOR: No incluye color de pintura ni entonadores; recomendamos que el cliente elija el tono en persona.', 15, y);
+  if (isRejas) {
+    doc.text('• HERRERÍA: El 70% del valor de mano de obra corresponde al desoxidado, cepillado y lijado manual de barrotes.', 15, y);
+  } else {
+    doc.text('• AVISO DE COLOR: No incluye color de pintura ni entonadores; recomendamos que el cliente elija el tono en persona.', 15, y);
+  }
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...grayText);
   y += 4.5;
@@ -173,7 +195,8 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.text('• Generado con KalkulAR | Calculadora de Presupuestos de Pintura | 100% Transparente y Gratuito.', 15, y);
 
   // Descarga del PDF
-  const filename = `Presupuesto_KalkulAR_${quoteData.meta.roomLabel.replace(/\s+/g, '_')}_${Date.now().toString().slice(-4)}.pdf`;
+  const safeLabel = (quoteData.meta.roomLabel || 'Herreria').replace(/[^a-zA-Z0-9]/g, '_');
+  const filename = `Presupuesto_KalkulAR_${safeLabel}_${Date.now().toString().slice(-4)}.pdf`;
   doc.save(filename);
 }
 
@@ -181,6 +204,28 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
  * Genera el texto formateado para compartir por WhatsApp
  */
 export function buildWhatsAppShareUrl(quoteData) {
+  const isRejas = quoteData.meta?.jobCategory === 'rejas';
+
+  if (isRejas) {
+    const text = `🛡️ *Presupuesto de Pintura para Rejas y Herrería*\n` +
+      `📅 Fecha: ${quoteData.meta.dateCalculated}\n\n` +
+      `📍 *Herrería:* ${quoteData.meta.roomLabel}\n` +
+      `📏 *Desarrollo:* ~${quoteData.surfaces.linearMeters} ml (${quoteData.surfaces.totalM2} m² lleno por vacío a 2 manos)\n\n` +
+      `💵 *Mano de Obra Estimada (Herrería & Desoxidado):*\n` +
+      `• Mínimo: $${quoteData.labor.min.toLocaleString('es-AR')}\n` +
+      `• Recomendado: $${quoteData.labor.recommended.toLocaleString('es-AR')}\n` +
+      `• Máximo: $${quoteData.labor.max.toLocaleString('es-AR')}\n` +
+      `⏱️ *Tiempo estimado:* ${quoteData.labor.estimatedDays} días hábiles\n\n` +
+      `🛒 *Materiales estimados:* ~$${quoteData.materials.estimatedCost.toLocaleString('es-AR')}\n` +
+      `• Esmalte 3 en 1: ${quoteData.materials.enamelContainersDescription || quoteData.materials.wallPaintContainers.description}\n` +
+      `• Aguarrás Mineral: ${quoteData.materials.aguarrasLiters || 1}L\n` +
+      `• Telas esmeril para metal + cepillo de alambre + pincel\n\n` +
+      `💡 *Nota técnica:* El 70% de la mano de obra corresponde a la preparación y desoxidado barrote por barrote.\n\n` +
+      `👉 Calculado gratis con KalkulAR (Calculadora de Presupuestos de Pintura)`;
+
+    return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+  }
+
   const text = `🎨 *Presupuesto Estimado de Pintura*\n` +
     `📅 Fecha: ${quoteData.meta.dateCalculated}\n\n` +
     `📍 *Ambiente:* ${quoteData.meta.roomLabel}\n` +

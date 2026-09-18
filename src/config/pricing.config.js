@@ -186,3 +186,251 @@ export const PRICING_CONFIG = {
     }
   ]
 };
+
+/**
+ * Configuración Especializada para Rejas, Portones y Herrería (2025/2026)
+ * Validada según normativas de cómputo y relevamiento en el mercado argentino.
+ */
+export const REJAS_PRICING_CONFIG = {
+  // Modalidades de cobro
+  modalities: {
+    // 1. Por metro lineal
+    linearMeter: {
+      id: 'linearMeter',
+      label: 'Por Metro Lineal (ml)',
+      unit: 'ml',
+      heightLimit: 1.5,
+      rates: {
+        maintenance: {
+          min: 6000,
+          recommended: 7500,
+          max: 9000,
+          label: 'Repintado / Mantenimiento leve',
+          description: 'Lijado superficial y 2 manos de esmalte sintético.'
+        },
+        standard: {
+          min: 8500,
+          recommended: 10500,
+          max: 12500,
+          label: 'Estándar (óxido puntual y lijado)',
+          description: 'Cepillado de óxido, convertidor en partes afectadas y 2 manos de esmalte 3 en 1.'
+        },
+        heavyRust: {
+          min: 12000,
+          recommended: 14000,
+          max: 16500,
+          label: 'Óxido severo / Decapado',
+          description: 'Rasqueteado profundo, tratamiento desoxidante y 3 manos completas.'
+        }
+      }
+    },
+
+    // 2. Por superficie "Lleno por Vacío"
+    fullVoidM2: {
+      id: 'fullVoidM2',
+      label: 'Lleno por Vacío (m² de paño)',
+      unit: 'm2',
+      rates: {
+        sheetMetal: {
+          min: 6500,
+          recommended: 8000,
+          max: 10000,
+          label: 'Chapa ciega / Portón liso'
+        },
+        standardBars: {
+          min: 8500,
+          recommended: 11000,
+          max: 14000,
+          label: 'Reja de barrotes estándar'
+        },
+        heavyMeshOrArtistic: {
+          min: 12000,
+          recommended: 15000,
+          max: 18500,
+          label: 'Malla tupida o herrería artística'
+        }
+      }
+    },
+
+    // 3. Módulos / Aberturas Estandarizadas
+    fixedUnits: [
+      {
+        id: 'standard_window',
+        name: 'Ventana Estándar con Reja',
+        dimensions: '1.50m x 1.20m',
+        recommendedPrice: 38000,
+        minPrice: 28000,
+        maxPrice: 50000,
+        areaM2: 1.8,
+        linearMetersEquiv: 3.5,
+        badge: 'Más común',
+        description: 'Ventana de dormitorio o living estándar (2 hojas).'
+      },
+      {
+        id: 'door_grille',
+        name: 'Puerta Reja de Entrada',
+        dimensions: '0.90m x 2.00m',
+        recommendedPrice: 48000,
+        minPrice: 35000,
+        maxPrice: 65000,
+        areaM2: 1.8,
+        linearMetersEquiv: 4.5,
+        badge: 'Seguridad',
+        description: 'Puerta de reja exterior con marco y cerradura.'
+      },
+      {
+        id: 'garage_gate',
+        name: 'Portón Garaje / Vehicular',
+        dimensions: '3.00m x 2.10m',
+        recommendedPrice: 95000,
+        minPrice: 70000,
+        maxPrice: 140000,
+        areaM2: 6.3,
+        linearMetersEquiv: 10.0,
+        badge: 'Vehicular',
+        description: 'Portón corredizo, levadizo o 2 hojas de abrir.'
+      },
+      {
+        id: 'balcony_window',
+        name: 'Ventanal Balcón / Baranda',
+        dimensions: '2.00m x 2.00m',
+        recommendedPrice: 65000,
+        minPrice: 48000,
+        maxPrice: 85000,
+        areaM2: 4.0,
+        linearMetersEquiv: 6.0,
+        badge: 'Balcón',
+        description: 'Puerta ventana balcón o paño de baranda corrida.'
+      },
+      {
+        id: 'perimeter_fence',
+        name: 'Reja Perimetral / Frente',
+        dimensions: 'Metros lineales a medida (hasta 1.50m)',
+        recommendedPrice: 10500, // valor base por metro lineal
+        minPrice: 8500,
+        maxPrice: 12500,
+        isLinear: true,
+        defaultMeters: 10,
+        badge: 'Por metro',
+        description: 'Reja de frente sobre murete o cerco perimetral.'
+      },
+      {
+        id: 'custom_grille',
+        name: 'Medidas Libres / Portón a Medida',
+        dimensions: 'Ingresá Ancho x Alto o m² exactos',
+        recommendedPrice: 11000, // por m2 vano completo
+        minPrice: 8500,
+        maxPrice: 14000,
+        isCustom: true,
+        badge: 'A medida',
+        description: 'Cálculo por superficie "lleno por vacío" para cualquier diseño.'
+      }
+    ]
+  },
+
+  // Recargos acumulables por dificultad
+  difficultySurcharges: {
+    // 1. Grado de Oxidación y Deterioro
+    rustState: {
+      light: {
+        id: 'light',
+        label: 'Superficial / Sano',
+        badge: 'Leve (0%)',
+        description: 'Pintura anterior firme o tono gastado. Solo lija fina de anclaje y limpieza.',
+        percent: 0,
+        tagColor: 'emerald'
+      },
+      medium: {
+        id: 'medium',
+        label: 'Óxido medio / Ampollas',
+        badge: 'Medio (+25%)',
+        description: 'Burbujas de pintura y óxido en uniones. Requiere cepillado manual y convertidor localizado.',
+        percent: 0.25,
+        tagColor: 'amber'
+      },
+      heavy: {
+        id: 'heavy',
+        label: 'Óxido severo / Escamado',
+        badge: 'Severo (+50%)',
+        description: 'Cascarones desprendidos y corrosión profunda. Exige amoladora, disco flap y desoxidante.',
+        percent: 0.50,
+        tagColor: 'rose'
+      }
+    },
+
+    // 2. Complejidad del Diseño de Herrería
+    designComplexity: {
+      straight: {
+        id: 'straight',
+        label: 'Barrotes rectos simples',
+        badge: 'Estándar (0%)',
+        description: 'Caños tubulares o cuadrados lisos sin adornos.',
+        percent: 0
+      },
+      twistedOrMesh: {
+        id: 'twistedOrMesh',
+        label: 'Torsionados o metal desplegado',
+        badge: 'Recovecos (+20%)',
+        description: 'Hierros retorcidos o malla romboidal con esquinas.',
+        percent: 0.20
+      },
+      artisticColonial: {
+        id: 'artisticColonial',
+        label: 'Herrería Artística Colonial',
+        badge: 'Complejo (+40%)',
+        description: 'Volutas, flores de fundición, remaches y detalles finos.',
+        percent: 0.40
+      }
+    },
+
+    // 3. Accesibilidad y Entorno
+    environment: {
+      groundFloor: {
+        id: 'groundFloor',
+        label: 'Planta baja cómoda',
+        badge: 'Normal (0%)',
+        description: 'Trabajo accesible a pie firme sin escaleras altas.',
+        percent: 0
+      },
+      heightOrBalcony: {
+        id: 'heightOrBalcony',
+        label: 'En altura / Balcón / Andamio',
+        badge: 'Altura (+30%)',
+        description: 'Requiere escaleras extensibles o trabajo en balcón sobre el vacío.',
+        percent: 0.30
+      },
+      tightGlassAccess: {
+        id: 'tightGlassAccess',
+        label: 'Muy pegada al vidrio (< 8cm)',
+        badge: 'Precisión (+25%)',
+        description: 'Poco espacio de maniobra contra cristales; exige encintado perimetral.',
+        percent: 0.25
+      }
+    }
+  },
+
+  // Rendimientos técnicos para cotizar materiales
+  yields: {
+    enamelLinearMetersPerLiter2Coats: 5.0, // 1 litro rinde 5 metros lineales a 2 manos
+    enamelFullVoidM2PerLiter2Coats: 4.5,     // 1 litro rinde 4.5 m2 paño completo a 2 manos
+    thinnerLitersPerEnamelLiter: 0.25,      // 0.25 litros de aguarrás por litro de esmalte
+    sandpaperSheetsPerLinearMeter: 0.35,    // pliegos de tela esmeril por metro lineal
+    sandpaperSheetsPerM2: 0.5,
+    desoxidanteLitersPerM2: 0.08
+  },
+
+  // Precios referenciales estimados de materiales de herrería
+  materialEstimatedPrices: {
+    enamel3in1_4L: 78000,
+    enamel3in1_1L: 22000,
+    convertidor1L: 18000,
+    desoxidante1L: 12000,
+    aguarras1L: 8500,
+    aguarras4L: 22000,
+    telaEsmerilHoja: 1800,
+    cepilloAlambre: 4500,
+    pincelCerdaMetal: 6500,
+    cintaPintor24mm: 3800
+  }
+};
+
