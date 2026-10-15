@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
 
-export function Hero({ onStartCalculator }) {
+export function Hero({ onStartCalculator, pseoPage }) {
   return (
     <section className="relative overflow-hidden pt-28 pb-16 md:pt-36 md:pb-24">
       {/* Background glow effects */}
@@ -14,22 +14,44 @@ export function Hero({ onStartCalculator }) {
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#ff6a00]/30 bg-[#ff6a00]/10 px-4 py-1.5 backdrop-blur-md shadow-[0_0_20px_-5px_rgba(255,106,0,0.3)]">
           <span className="dock-dot-orange"></span>
           <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#ff7d1a]">
-            #Calculá Tu Obra · Precios Transparentes 2026
+            {pseoPage ? `${pseoPage.badge} · Precios Testigo 2026` : '#Calculá Tu Obra · Precios Transparentes 2026'}
           </span>
         </div>
 
-        {/* Main Headline */}
+        {/* Main Headline con Entidad Primaria SEO */}
         <h1 className="max-w-4xl text-3xl sm:text-5xl md:text-6xl font-black leading-[1.08] tracking-tight text-slate-900 dark:text-white">
-          ¿Cuánto te pueden cobrar por pintar tu casa?
-          <br />
-          <span className="bg-gradient-to-r from-[#ff7d1a] via-[#ff6a00] to-[#fbbf24] bg-clip-text text-transparent drop-shadow-sm">
-            Calculá tu presupuesto en minutos.
-          </span>
+          {pseoPage ? (
+            <>
+              <span className="block text-xs sm:text-sm font-extrabold uppercase tracking-[0.18em] text-[#ff7d1a] mb-2 sm:mb-3">
+                Calculadora de Pintura y Mano de Obra en Argentina (2026)
+              </span>
+              <span className="text-slate-900 dark:text-white">
+                {pseoPage.h1}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="block text-xs sm:text-sm font-extrabold uppercase tracking-[0.18em] text-[#ff7d1a] mb-2 sm:mb-3">
+                Calculadora de Pintura y Mano de Obra por m² en Argentina
+              </span>
+              ¿Cuánto te pueden cobrar por pintar tu casa?
+              <br />
+              <span className="bg-gradient-to-r from-[#ff7d1a] via-[#ff6a00] to-[#fbbf24] bg-clip-text text-transparent drop-shadow-sm">
+                Calculá tu presupuesto en minutos.
+              </span>
+            </>
+          )}
         </h1>
 
         {/* Subtitle enfocado en Marketing/SEO */}
         <p className="mt-5 max-w-2xl text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-          Evitá sobreprecios. Calculá en segundos el costo real de <strong className="text-slate-900 dark:text-white font-semibold">mano de obra por m²</strong> y recibí la lista de materiales que vas a necesitar con descuento en <span className="text-amber-500 dark:text-[#ffe600] font-bold">Mercado Libre</span>.
+          {pseoPage ? (
+            pseoPage.subtitle
+          ) : (
+            <>
+              Evitá sobreprecios. Calculá en segundos el costo real de <strong className="text-slate-900 dark:text-white font-semibold">mano de obra por m²</strong> y recibí la lista de materiales que vas a necesitar con descuento en <span className="text-amber-500 dark:text-[#ffe600] font-bold">Mercado Libre</span>.
+            </>
+          )}
         </p>
 
         {/* CTAs */}

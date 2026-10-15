@@ -12,17 +12,17 @@ export function TransparencySection() {
 
       <div className="mx-auto max-w-6xl px-4 md:px-8">
         
-        {/* Header */}
+        {/* Header con H2 Semántico */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#ff6a00]/30 bg-[#ff6a00]/10 px-3.5 py-1 text-xs font-bold text-[#ea580c] dark:text-[#ff7d1a] uppercase tracking-wider mb-3">
             <ShieldCheck className="h-3.5 w-3.5 text-[#ff6a00]" />
-            100% Transparencia & Metodología Abierta
+            100% Transparencia & Fórmulas de Fabricantes
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white">
-            ¿Cómo calculamos tu presupuesto?
+          <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white leading-tight">
+            Metodología de Cálculo de Mano de Obra por m² y Rendimiento de Pintura
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-base mt-2 leading-relaxed">
-            Eliminamos la incertidumbre de no saber cuánto cuesta un trabajo. Te mostramos las fórmulas matemáticas, los costos testigo de mano de obra y los rendimientos oficiales de fábrica.
+            ¿Cómo calculamos tu presupuesto? Eliminamos la incertidumbre de sobreprecios: te mostramos las fórmulas matemáticas, los costos testigo de mano de obra y los rendimientos oficiales de fábrica en Argentina.
           </p>
         </div>
 

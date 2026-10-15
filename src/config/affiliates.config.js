@@ -1,9 +1,27 @@
 /**
- * Configuración de Afiliados de Mercado Libre
- * Aquí puedes cambiar tu ID de afiliado o pegar directamente el enlace de afiliado de cada producto.
+ * =========================================================================
+ * 🏷️ ENLACES DE AFILIADOS DE MARCAS LÍDERES (Tabla Comparativa Below-the-fold)
+ * Modificá estos enlaces directamente aquí para actualizar los links de Mercado Libre.
+ * =========================================================================
  */
+export const BRAND_AFFILIATE_LINKS = {
+  // 1. Alba (Albalatex Mate / Ultralavable)
+  alba: 'https://meli.la/1Aw3cH6',
+
+  // 2. Sherwin Williams (Quantum / Loxon Interior)
+  sherwinWilliams: 'https://meli.la/1sc2muk',
+
+  // 3. Tersuave (Tersilux / Lavable)
+  tersuave: 'https://meli.la/33H7Y4f',
+
+  // 4. Casablanca (Pro Obra / Interior Clásico)
+  casablanca: 'https://meli.la/2JzL2rN'
+};
 
 export const AFFILIATES_CONFIG = {
+  // Enlaces centralizados de marcas líderes
+  brands: BRAND_AFFILIATE_LINKS,
+
   // Configuración global de afiliado
   affiliateTag: 'kalkular-20', // Tu tag o ID de afiliado de Mercado Libre
   marketplaceCountry: 'MLA', // Argentina

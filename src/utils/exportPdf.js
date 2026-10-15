@@ -244,3 +244,49 @@ export function buildWhatsAppShareUrl(quoteData) {
 
   return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
 }
+
+/**
+ * Genera el texto formateado con los enlaces directos de afiliados para compartir o guardar la lista de compras por WhatsApp
+ */
+export function buildWhatsAppMaterialsShareUrl(quoteData) {
+  const isRejas = quoteData.meta?.jobCategory === 'rejas';
+  const items = quoteData.materials?.itemsList || [];
+  
+  let materialsListText = '';
+  items.forEach((item, idx) => {
+    materialsListText += `${idx + 1}. *${item.name}*\n   📦 Cantidad: ${item.quantityLabel}\n   🛒 Link: ${item.affiliateUrl}\n\n`;
+  });
+
+  if (isRejas) {
+    const text = `🛡️ *KalkulAR | Presupuesto y Lista de Compras de Herrería*\n` +
+      `📅 Fecha: ${quoteData.meta?.dateCalculated || '2026'}\n\n` +
+      `📍 *Trabajo:* ${quoteData.meta?.roomLabel || 'Herrería'}\n` +
+      `📏 *Desarrollo:* ~${quoteData.surfaces?.linearMeters || 0} ml (${quoteData.surfaces?.totalM2 || 0} m² a 2 manos)\n\n` +
+      `💵 *Mano de Obra Estimada:*\n` +
+      `• Promedio recomendado: $${quoteData.labor?.recommended?.toLocaleString('es-AR')} ARS (Rango: $${quoteData.labor?.min?.toLocaleString('es-AR')} a $${quoteData.labor?.max?.toLocaleString('es-AR')} ARS)\n` +
+      `⏱️ *Tiempo estimado:* ${quoteData.labor?.estimatedDays || 2} días hábiles\n\n` +
+      `🛒 *MATERIALES RECOMENDADOS (MERCADO LIBRE):*\n` +
+      `Estimado total: ~$${quoteData.materials?.estimatedCost?.toLocaleString('es-AR')} ARS\n\n` +
+      materialsListText +
+      `💡 *Tip de Ahorro:* Comprá por Mercado Libre con envío a domicilio y cuotas antes de iniciar la obra.\n\n` +
+      `👉 Calculá presupuestos gratis en: https://kalkular.com`;
+
+    return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+  }
+
+  const text = `🎨 *KalkulAR | Presupuesto y Lista de Compras de Pintura*\n` +
+    `📅 Fecha: ${quoteData.meta?.dateCalculated || '2026'}\n\n` +
+    `📍 *Ambiente:* ${quoteData.meta?.roomLabel || 'Habitación'}\n` +
+    `📏 *Superficie Total:* ${quoteData.surfaces?.totalM2 || 0} m² (${quoteData.surfaces?.wallM2 || 0} m² paredes${(quoteData.surfaces?.ceilingM2 || 0) > 0 ? ` + ${quoteData.surfaces.ceilingM2} m² techo` : ''})\n\n` +
+    `💵 *Mano de Obra Estimada:*\n` +
+    `• Promedio recomendado: $${quoteData.labor?.recommended?.toLocaleString('es-AR')} ARS (Rango: $${quoteData.labor?.min?.toLocaleString('es-AR')} a $${quoteData.labor?.max?.toLocaleString('es-AR')} ARS)\n` +
+    `⏱️ *Tiempo estimado:* ${quoteData.labor?.estimatedDays || 2} días hábiles\n\n` +
+    `🛒 *MATERIALES RECOMENDADOS (MERCADO LIBRE):*\n` +
+    `Estimado total: ~$${quoteData.materials?.estimatedCost?.toLocaleString('es-AR')} ARS\n\n` +
+    materialsListText +
+    `💡 *Tip de Ahorro:* Los baldes pesados de 20L conviene pedirlos por Mercado Libre para ahorrar flete y financiar en cuotas.\n\n` +
+    `👉 Calculá presupuestos gratis en: https://kalkular.com`;
+
+  return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+}
+

@@ -5,12 +5,12 @@ import { StepConditions } from './StepConditions.jsx';
 import { StepResults } from './StepResults.jsx';
 import { Check } from 'lucide-react';
 
-export function CalculatorWizard() {
+export function CalculatorWizard({ initialPreset }) {
   const wizardRef = useRef(null);
 
   const [currentStep, setCurrentStep] = useState(1);
 
-  const [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState(() => ({
     jobCategory: 'walls', // 'walls' | 'rejas'
     // Campos para paredes
     roomType: 'room_medium',
@@ -35,7 +35,8 @@ export function CalculatorWizard() {
     rejaEnvironments: [], // ['heightOrBalcony', 'tightGlassAccess']
     // Común
     materialsBuyer: 'client', // por defecto el cliente compra en Mercado Libre
-  });
+    ...(initialPreset || {})
+  }));
 
   const handleUpdateInputs = (partial) => {
     setInputs(prev => ({ ...prev, ...partial }));

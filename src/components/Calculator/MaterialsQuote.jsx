@@ -1,5 +1,14 @@
 import React from 'react';
-import { ShoppingCart, ExternalLink, Star, CheckCircle, Shield } from 'lucide-react';
+import { 
+  ShoppingCart, 
+  ExternalLink, 
+  Star, 
+  CheckCircle, 
+  Shield, 
+  Truck, 
+  CreditCard, 
+  MessageCircle 
+} from 'lucide-react';
 import {
   getProductIcon,
   Latex20LIcon,
@@ -11,10 +20,16 @@ import {
   LijasTelaEsmerilIcon,
   PincelCerdaMetalIcon
 } from './ProductIcons';
+import { buildWhatsAppMaterialsShareUrl } from '../../utils/exportPdf.js';
 
 export function MaterialsQuote({ quoteData }) {
   const { materials, surfaces, meta } = quoteData;
   const isRejas = meta?.jobCategory === 'rejas';
+
+  const handleShareWhatsAppMaterials = () => {
+    const url = buildWhatsAppMaterialsShareUrl(quoteData);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <section id="materiales" className="mt-14 pt-12 border-t border-slate-200 dark:border-white/10 space-y-10 animate-fade-in transition-colors">
@@ -31,8 +46,8 @@ export function MaterialsQuote({ quoteData }) {
           </h3>
           <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-2xl leading-relaxed">
             {isRejas
-              ? `Calculamos las cantidades exactas para pintar ${surfaces.linearMeters} metros lineales aprox. (${surfaces.totalM2} m² lleno por vacío a 2 manos). Comprá directo por Mercado Libre y recibí todo en tu puerta.`
-              : `Calculamos las cantidades exactas para pintar ${surfaces.totalM2} m² (2 manos completas). Comprá directo por Mercado Libre y recibí todo en tu puerta.`}
+              ? `Calculamos las cantidades exactas para pintar ${surfaces.linearMeters} metros lineales aprox. (${surfaces.totalM2} m² lleno por vacío a 2 manos). Comprá directo en Tiendas Oficiales por Mercado Libre y recibí todo en tu puerta.`
+              : `Calculamos las cantidades exactas para pintar ${surfaces.totalM2} m² (2 manos completas). Comprá directo en Tiendas Oficiales por Mercado Libre y recibí todo en tu puerta.`}
           </p>
         </div>
 
@@ -44,6 +59,31 @@ export function MaterialsQuote({ quoteData }) {
           </p>
           <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 block">Precios promedio en Mercado Libre</span>
         </div>
+      </div>
+
+      {/* Botón Práctico WhatsApp: Guardar / Enviar Lista y Presupuesto */}
+      <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/5 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-md shadow-emerald-500/30">
+            <MessageCircle className="h-6 w-6" />
+          </div>
+          <div>
+            <h4 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+              ¿Querés guardar esta lista o enviársela a tu pintor?
+            </h4>
+            <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              Armá un mensaje con los m² calculados, costos estimados de mano de obra y los links directos a cada material en Mercado Libre.
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={handleShareWhatsAppMaterials}
+          className="w-full sm:w-auto flex-shrink-0 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-extrabold px-5 py-3 shadow-md shadow-emerald-600/25 transition-all hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+        >
+          <MessageCircle className="h-4 w-4" />
+          <span>Enviar Presupuesto y Lista por WhatsApp</span>
+        </button>
       </div>
 
       {/* Resumen Rápido de Insumos con Iconos */}
@@ -143,7 +183,24 @@ export function MaterialsQuote({ quoteData }) {
         </div>
       )}
 
-      {/* Grid del Catálogo de Productos con Iconos Vectoriales */}
+      {/* 💡 Bloque Visual: Tip de Ahorro y Logística */}
+      <div className="rounded-3xl border border-amber-400/40 bg-gradient-to-r from-amber-400/10 via-orange-500/10 to-transparent p-5 sm:p-6 backdrop-blur-md shadow-xs">
+        <div className="flex items-start gap-3.5 sm:gap-4">
+          <div className="flex h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-amber-400/20 text-amber-600 dark:text-yellow-400 text-xl font-black">
+            💡
+          </div>
+          <div className="space-y-1.5 min-w-0">
+            <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <span>Tip de Ahorro y Logística: Comprá los baldes pesados con envío a domicilio</span>
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              Un balde de pintura de 20 litros pesa más de <strong className="text-slate-900 dark:text-white">30 kg</strong>. Comprarlo por Mercado Libre te ahorra el costo de contratar un flete o furgón particular y te permite financiar en <strong className="text-slate-900 dark:text-white">hasta 6 cuotas</strong> en Tiendas Oficiales (Alba, Tersuave, Sherwin Williams), recibiendo todo en tu puerta antes de que el pintor empiece el trabajo.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid del Catálogo de Productos con Iconos Vectoriales y Optimización CRO */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {materials.itemsList.map((item, index) => (
           <div
@@ -174,10 +231,15 @@ export function MaterialsQuote({ quoteData }) {
                 </div>
               </div>
 
-              {/* Marca recomendada */}
-              <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 pl-0.5">
-                <span>Marcas sugeridas:</span>
-                <span className="text-slate-700 dark:text-slate-200 font-medium">{item.brand}</span>
+              {/* Marca recomendada y Garantía */}
+              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pl-0.5 flex-wrap gap-1">
+                <div className="flex items-center gap-1.5">
+                  <span>Marcas sugeridas:</span>
+                  <span className="text-slate-700 dark:text-slate-200 font-medium">{item.brand}</span>
+                </div>
+                <span className="text-[10px] text-amber-600 dark:text-yellow-400 font-semibold flex items-center gap-1">
+                  <Shield className="h-3 w-3" /> Tienda Oficial
+                </span>
               </div>
 
               {/* Cantidad Calculada */}
@@ -196,6 +258,17 @@ export function MaterialsQuote({ quoteData }) {
                 {item.tagline}
               </p>
 
+              {/* Micro-Badges de Conversión (Envío & Financiación) */}
+              <div className="flex items-center gap-2 text-[11px] text-slate-600 dark:text-slate-300 pt-1">
+                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                  <Truck className="h-3.5 w-3.5" /> Envío a Domicilio
+                </span>
+                <span>•</span>
+                <span className="inline-flex items-center gap-1 text-slate-500 dark:text-slate-400 font-medium">
+                  <CreditCard className="h-3.5 w-3.5" /> Cuotas disponibles
+                </span>
+              </div>
+
               {/* Ratings & Precio Estimado */}
               <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-white/10">
                 <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/[0.04] px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/5">
@@ -210,18 +283,21 @@ export function MaterialsQuote({ quoteData }) {
               </div>
             </div>
 
-            {/* Botón de Afiliado Mercado Libre */}
+            {/* Botón de Afiliado Mercado Libre Optimizado */}
             <div className="mt-6 pt-2">
               <a
                 href={item.affiliateUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#ffe600] px-4 text-xs font-black text-slate-900 shadow-lg shadow-yellow-500/15 transition-all hover:bg-[#fff04d] hover:scale-[1.02] active:scale-[0.98]"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#ffe600] px-4 text-xs font-black text-slate-900 shadow-lg shadow-yellow-500/15 transition-all hover:bg-[#fff04d] hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
                 <ShoppingCart className="h-4 w-4 text-slate-900" />
-                <span>Comprar en Mercado Libre</span>
+                <span>Ver precio y envío en Mercado Libre</span>
                 <ExternalLink className="h-3.5 w-3.5 text-slate-900/80 ml-0.5" />
               </a>
+              <p className="text-[10px] text-center text-slate-500 dark:text-slate-400 mt-1.5">
+                Tienda Oficial · Compra Protegida
+              </p>
             </div>
           </div>
         ))}
