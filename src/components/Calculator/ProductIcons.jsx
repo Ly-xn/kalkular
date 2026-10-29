@@ -285,6 +285,70 @@ export function PincelCerdaMetalIcon({ className = "w-8 h-8" }) {
   );
 }
 
+export function AcSplitUnitIcon({ className = "w-8 h-8" }) {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Unidad Interior Split */}
+      <rect x="6" y="10" width="36" height="14" rx="3" fill="#0ea5e9" fillOpacity="0.15" stroke="currentColor" strokeWidth="2.2" />
+      {/* Deflector / Flap inferior */}
+      <path d="M9 20H39" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      {/* Display LED */}
+      <rect x="33" y="13" width="5" height="3" rx="1" fill="#38bdf8" />
+      {/* Ondas de aire frío */}
+      <path d="M14 28C14 31 11 33 11 36" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" />
+      <path d="M24 28C24 31 21 33 21 36" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" />
+      <path d="M34 28C34 31 31 33 31 36" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" />
+      {/* Copo / Frío */}
+      <circle cx="24" cy="41" r="2" fill="#0ea5e9" />
+    </svg>
+  );
+}
+
+export function AcInstallKitIcon({ className = "w-8 h-8" }) {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Rollo de caño de cobre */}
+      <circle cx="22" cy="24" r="13" stroke="#d97706" strokeWidth="2.4" fill="#f59e0b" fillOpacity="0.12" />
+      <circle cx="22" cy="24" r="8" stroke="#d97706" strokeWidth="2" strokeDasharray="3 2" />
+      {/* Ménsula L de soporte */}
+      <path d="M34 10V38H43" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+      <line x1="34" y1="31" x2="41" y2="38" stroke="#0ea5e9" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function AcVoltageProtectorIcon({ className = "w-8 h-8" }) {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Carcasa del protector digital */}
+      <rect x="13" y="8" width="22" height="32" rx="4" fill="#0ea5e9" fillOpacity="0.12" stroke="currentColor" strokeWidth="2.2" />
+      {/* Pantalla LED 220V */}
+      <rect x="17" y="13" width="14" height="8" rx="1.5" fill="#0284c7" fillOpacity="0.3" stroke="#0ea5e9" strokeWidth="1.6" />
+      {/* Tomacorriente 20A de 3 patas */}
+      <line x1="21" y1="28" x2="23" y2="30" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <line x1="27" y1="28" x2="25" y2="30" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <line x1="24" y1="33" x2="24" y2="36" stroke="#0ea5e9" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function AcElectricBreakerIcon({ className = "w-8 h-8" }) {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Llave Térmica Bipolar DIN */}
+      <rect x="12" y="8" width="24" height="32" rx="3" stroke="currentColor" strokeWidth="2.2" fill="currentColor" fillOpacity="0.1" />
+      <line x1="24" y1="8" x2="24" y2="40" stroke="currentColor" strokeWidth="1.6" strokeDasharray="3 2" />
+      {/* Palanca Bipolar */}
+      <rect x="16" y="21" width="16" height="6" rx="1.5" fill="#0ea5e9" stroke="#0284c7" strokeWidth="1.6" />
+      {/* Bornes */}
+      <circle cx="18" cy="13" r="1.5" fill="currentColor" />
+      <circle cx="30" cy="13" r="1.5" fill="currentColor" />
+      <circle cx="18" cy="35" r="1.5" fill="currentColor" />
+      <circle cx="30" cy="35" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
 /**
  * Selector de icono según el id del material
  */
@@ -326,6 +390,19 @@ export function getProductIcon(productId, className = "w-8 h-8") {
       return <LijasTelaEsmerilIcon className={className} />;
     case 'pincelCerdaMetal':
       return <PincelCerdaMetalIcon className={className} />;
+    // Climatización y Aires Acondicionados
+    case 'acSplit2250':
+    case 'acSplit3000':
+    case 'acSplit4500':
+    case 'acSplit6000':
+      return <AcSplitUnitIcon className={className} />;
+    case 'kitInstalacion14_38':
+    case 'kitInstalacion14_12':
+      return <AcInstallKitIcon className={className} />;
+    case 'protectorTension20A':
+      return <AcVoltageProtectorIcon className={className} />;
+    case 'kitElectricoToma20A':
+      return <AcElectricBreakerIcon className={className} />;
     default:
       return <Latex20LIcon className={className} />;
   }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PRICING_CONFIG, REJAS_PRICING_CONFIG } from '../../config/pricing.config.js';
+import { PRICING_CONFIG, REJAS_PRICING_CONFIG, AC_PRICING_CONFIG } from '../../config/pricing.config.js';
 import { RoomMeasureModal } from './RoomMeasureModal.jsx';
 import { 
   Home, 
@@ -18,12 +18,16 @@ import {
   Maximize2, 
   Sliders, 
   Plus, 
-  Minus 
+  Minus,
+  Snowflake,
+  Building2,
+  Wind
 } from 'lucide-react';
 
 export function StepRooms({ inputs, onChangeInputs, onNextStep }) {
   const [modalOpen, setModalOpen] = useState(false);
   const isRejas = inputs.jobCategory === 'rejas';
+  const isAc = inputs.jobCategory === 'ac';
 
   const getRoomIcon = (id) => {
     switch (id) {
@@ -45,6 +49,18 @@ export function StepRooms({ inputs, onChangeInputs, onNextStep }) {
       case 'perimeter_fence': return Ruler;
       case 'custom_grille': return Sliders;
       default: return Shield;
+    }
+  };
+
+  const getAcRoomIcon = (id) => {
+    switch (id) {
+      case 'ac_bedroom_small': return Bed;
+      case 'ac_bedroom_medium': return Home;
+      case 'ac_living_medium': return Maximize;
+      case 'ac_quincho_mono': return UtensilsCrossed;
+      case 'ac_commercial': return Building2;
+      case 'ac_custom': return Sliders;
+      default: return Snowflake;
     }
   };
 
@@ -74,6 +90,33 @@ export function StepRooms({ inputs, onChangeInputs, onNextStep }) {
     });
   };
 
+  const handleSelectAcRoom = (preset) => {
+    const defaultInternalLoads = [];
+    if (preset.defaultKitchen) defaultInternalLoads.push('integratedKitchen');
+    if (preset.defaultElectronics) defaultInternalLoads.push('heavyElectronics');
+
+    if (preset.id === 'ac_custom') {
+      onChangeInputs({
+        acRoomType: 'ac_custom',
+        useManualM2: false,
+        length: inputs.length || 4.0,
+        width: inputs.width || 4.0,
+        height: inputs.height || 2.5
+      });
+    } else {
+      onChangeInputs({
+        acRoomType: preset.id,
+        useManualM2: false,
+        length: preset.length,
+        width: preset.width,
+        height: preset.height,
+        acRoofType: preset.defaultRoof || 'slab_covered',
+        acSunExposure: preset.defaultSun || 'low_south',
+        acInternalLoads: defaultInternalLoads
+      });
+    }
+  };
+
   const handleModalMeasurements = (measurements) => {
     onChangeInputs({
       roomType: 'custom',
@@ -87,17 +130,25 @@ export function StepRooms({ inputs, onChangeInputs, onNextStep }) {
 
   const isFixedUnit = ['standard_window', 'door_grille', 'garage_gate', 'balcony_window'].includes(inputs.rejaType || 'standard_window');
 
+  // Cálculo en vivo de m² y m³ para Climatización
+  const liveAcAreaM2 = inputs.useManualM2
+    ? Math.max(4, parseFloat(inputs.manualM2) || 14)
+    : Math.round((Math.max(1.5, parseFloat(inputs.length) || 4) * Math.max(1.5, parseFloat(inputs.width) || 3.5)) * 10) / 10;
+  const liveAcHeight = Math.max(2.0, parseFloat(inputs.height) || 2.5);
+  const liveAcVolumeM3 = Math.round(liveAcAreaM2 * liveAcHeight * 10) / 10;
+  const liveAcBaseFg = Math.round(liveAcVolumeM3 * 50);
+
   return (
     <div className="space-y-8 animate-fade-in">
       
-      {/* Selector Principal de Categoría de Trabajo: Paredes vs Rejas */}
+      {/* Selector Principal de Categoría de Trabajo: Paredes vs Rejas vs Aires y Frigorías */}
       <div className="flex justify-center">
-        <div className="inline-flex p-1.5 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-inner max-w-full overflow-x-auto">
+        <div className="inline-flex p-1.5 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-inner max-w-full overflow-x-auto gap-1">
           <button
             type="button"
-            onClick={() => onChangeInputs({ jobCategory: 'walls' })}
-            className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
-              !isRejas
+            onClick={() => onChangeInputs({ jobCategory: 'walls', useManualM2: false })}
+            className={`flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+              !isRejas && !isAc
                 ? 'bg-[#ff6a00] text-white shadow-md shadow-orange-500/25 scale-[1.02]'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
             }`}
@@ -109,7 +160,7 @@ export function StepRooms({ inputs, onChangeInputs, onNextStep }) {
           <button
             type="button"
             onClick={() => onChangeInputs({ jobCategory: 'rejas' })}
-            className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
               isRejas
                 ? 'bg-[#ff6a00] text-white shadow-md shadow-orange-500/25 scale-[1.02]'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
@@ -118,26 +169,49 @@ export function StepRooms({ inputs, onChangeInputs, onNextStep }) {
             <Shield className="h-4 w-4" />
             <span>Rejas y Portones</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => onChangeInputs({ jobCategory: 'ac', useManualM2: false })}
+            className={`flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
+              isAc
+                ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/25 scale-[1.02]'
+                : 'text-slate-600 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400'
+            }`}
+          >
+            <Snowflake className="h-4 w-4" />
+            <span>Aires y Frigorías</span>
+          </button>
         </div>
       </div>
 
       {/* Header del Paso */}
       <div className="text-center max-w-xl mx-auto">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ff6a00]/10 border border-[#ff6a00]/25 px-3 py-1 text-xs font-bold text-[#ea580c] dark:text-[#ff7d1a] uppercase tracking-wider mb-2">
+        <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wider mb-2 ${
+          isAc
+            ? 'bg-sky-500/10 border-sky-500/25 text-sky-600 dark:text-sky-400'
+            : 'bg-[#ff6a00]/10 border-[#ff6a00]/25 text-[#ea580c] dark:text-[#ff7d1a]'
+        }`}>
           Paso 1 de 3
         </span>
         <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">
-          {isRejas ? '¿Qué tipo de herrería vas a pintar?' : '¿Qué tipo de espacio vas a pintar?'}
+          {isAc
+            ? '¿Qué ambiente vas a climatizar?'
+            : isRejas
+            ? '¿Qué tipo de herrería vas a pintar?'
+            : '¿Qué tipo de espacio vas a pintar?'}
         </h2>
         <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm mt-1">
-          {isRejas
+          {isAc
+            ? 'Elegí un tamaño de ambiente o ajustá el Largo, Ancho y Alto para calcular el volumen real en m³ y las frigorías exactas.'
+            : isRejas
             ? 'Elegí el tipo de abertura, portón o cerco perimetral para calcular el desoxidado y esmalte 3 en 1.'
             : 'Elegí una medida estándar sugerida o introducí tus metros cuadrados exactos.'}
         </p>
       </div>
 
       {/* RENDER CATEGORÍA: PAREDES */}
-      {!isRejas && (
+      {!isRejas && !isAc && (
         <>
           {/* Grid de Ambientes */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -592,15 +666,227 @@ export function StepRooms({ inputs, onChangeInputs, onNextStep }) {
         </div>
       )}
 
+      {/* RENDER CATEGORÍA: AIRES Y FRIGORÍAS (CLIMATIZACIÓN) */}
+      {isAc && (
+        <div className="space-y-6">
+          {/* Grid de los 6 Presets de Ambientes a Climatizar */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {AC_PRICING_CONFIG.presetRooms.map((preset) => {
+              const Icon = getAcRoomIcon(preset.id);
+              const isSelected = (inputs.acRoomType || 'ac_bedroom_medium') === preset.id;
+
+              return (
+                <div
+                  key={preset.id}
+                  onClick={() => handleSelectAcRoom(preset)}
+                  className={`group relative cursor-pointer rounded-2xl p-4 md:p-5 transition-all duration-300 border ${
+                    isSelected
+                      ? 'border-sky-500 bg-gradient-to-b from-sky-500/15 via-sky-500/5 to-transparent dark:to-[#131b2e] shadow-md shadow-sky-500/15 scale-[1.02]'
+                      : 'border-slate-200/90 bg-white hover:border-sky-500/40 hover:bg-slate-50/80 shadow-xs dark:border-white/10 dark:bg-[#111726]/60 dark:hover:border-sky-500/30 dark:hover:bg-[#111726]/90'
+                  }`}
+                >
+                  {/* Badge & Icon */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl transition-transform group-hover:scale-110 ${
+                      isSelected ? 'bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/40' : 'bg-slate-100 text-slate-600 dark:bg-white/5 dark:text-slate-300'
+                    }`}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+                      isSelected 
+                        ? 'border-sky-500/40 bg-sky-500/20 text-sky-700 dark:text-sky-300'
+                        : 'border-slate-200 bg-slate-100 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-400'
+                    }`}>
+                      {preset.badge}
+                    </span>
+                  </div>
+
+                  {/* Título & Dimensiones */}
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center justify-between">
+                    <span>{preset.name}</span>
+                    {isSelected && <Check className="h-4 w-4 text-sky-500" />}
+                  </h3>
+                  <p className="text-xs text-sky-600 dark:text-sky-400 font-bold mt-0.5">
+                    {preset.dimensions}
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+                    {preset.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Panel de Edición de Largo, Ancho y Alto (con vista en vivo de m² y m³) */}
+          <div className="rounded-3xl border border-sky-200 dark:border-sky-500/30 bg-sky-50/50 dark:bg-[#131b2e]/80 p-5 md:p-6 backdrop-blur-md">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-white/10">
+              <div>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Ruler className="h-4 w-4 text-sky-500" />
+                  <span>Dimensiones del Ambiente y Volumen a Climatizar</span>
+                </h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Ajustá Largo, Ancho y Altura de techo para calcular el volumen exacto en m³.
+                </p>
+              </div>
+
+              {/* Switch: Largo x Ancho x Alto vs Ingresar m² directos */}
+              <div className="flex items-center gap-2 bg-slate-200/70 dark:bg-white/5 p-1 rounded-xl border border-slate-300/60 dark:border-white/10 self-start sm:self-center">
+                <button
+                  type="button"
+                  onClick={() => onChangeInputs({ useManualM2: false })}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                    !inputs.useManualM2
+                      ? 'bg-sky-600 text-white shadow-md'
+                      : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
+                  }`}
+                >
+                  Largo x Ancho x Alto
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeInputs({ useManualM2: true, manualM2: liveAcAreaM2 })}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                    inputs.useManualM2
+                      ? 'bg-sky-600 text-white shadow-md'
+                      : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
+                  }`}
+                >
+                  Ingresar m² de piso
+                </button>
+              </div>
+            </div>
+
+            {!inputs.useManualM2 ? (
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs text-slate-600 dark:text-slate-400 mb-1.5 font-semibold">Largo del ambiente (m)</label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="1.5"
+                      max="30"
+                      step="0.1"
+                      value={inputs.length || 4}
+                      onChange={(e) => onChangeInputs({ length: parseFloat(e.target.value) || 0, acRoomType: 'ac_custom' })}
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base font-bold text-slate-900 focus:border-sky-500 focus:outline-none dark:border-white/15 dark:bg-white/5 dark:text-white"
+                    />
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">m</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-600 dark:text-slate-400 mb-1.5 font-semibold">Ancho del ambiente (m)</label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="1.5"
+                      max="30"
+                      step="0.1"
+                      value={inputs.width || 3.5}
+                      onChange={(e) => onChangeInputs({ width: parseFloat(e.target.value) || 0, acRoomType: 'ac_custom' })}
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base font-bold text-slate-900 focus:border-sky-500 focus:outline-none dark:border-white/15 dark:bg-white/5 dark:text-white"
+                    />
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">m</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-600 dark:text-slate-400 mb-1.5 font-semibold">Altura del techo (m)</label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="2.0"
+                      max="6.0"
+                      step="0.1"
+                      value={inputs.height || 2.5}
+                      onChange={(e) => onChangeInputs({ height: parseFloat(e.target.value) || 2.5 })}
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base font-bold text-slate-900 focus:border-sky-500 focus:outline-none dark:border-white/15 dark:bg-white/5 dark:text-white"
+                    />
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">m</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                    Superficie de planta / piso (m²):
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="4"
+                      max="200"
+                      step="1"
+                      value={inputs.manualM2 || 14}
+                      onChange={(e) => onChangeInputs({ manualM2: Math.max(4, parseFloat(e.target.value) || 0), acRoomType: 'ac_custom' })}
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base font-bold text-slate-900 focus:border-sky-500 focus:outline-none dark:border-white/15 dark:bg-white/5 dark:text-white"
+                      placeholder="Ej: 18"
+                    />
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">m²</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                    Altura del techo (m):
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="2.0"
+                      max="6.0"
+                      step="0.1"
+                      value={inputs.height || 2.5}
+                      onChange={(e) => onChangeInputs({ height: parseFloat(e.target.value) || 2.5 })}
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-base font-bold text-slate-900 focus:border-sky-500 focus:outline-none dark:border-white/15 dark:bg-white/5 dark:text-white"
+                    />
+                    <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">m</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Indicadores en vivo de Superficie (m²), Volumen (m³) y Base Térmica */}
+            <div className="mt-5 pt-4 border-t border-sky-200/70 dark:border-white/10 grid grid-cols-3 gap-3">
+              <div className="rounded-2xl bg-white dark:bg-white/[0.04] border border-sky-200/80 dark:border-white/10 p-3 text-center">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">Superficie Piso</span>
+                <p className="text-base sm:text-lg font-black text-slate-900 dark:text-white mt-0.5">{liveAcAreaM2} m²</p>
+              </div>
+              <div className="rounded-2xl bg-sky-500/10 border border-sky-500/30 p-3 text-center">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-300 block">Volumen Real</span>
+                <p className="text-base sm:text-lg font-black text-sky-600 dark:text-sky-400 mt-0.5">{liveAcVolumeM3} m³</p>
+              </div>
+              <div className="rounded-2xl bg-white dark:bg-white/[0.04] border border-sky-200/80 dark:border-white/10 p-3 text-center">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">Base (50 fg/m³)</span>
+                <p className="text-base sm:text-lg font-black text-slate-900 dark:text-white mt-0.5">{liveAcBaseFg.toLocaleString('es-AR')} fg</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Nota técnica CACAAV sobre volumen */}
+          <div className="rounded-2xl border border-sky-300 dark:border-sky-500/25 bg-sky-50/80 dark:bg-sky-500/5 p-4 flex items-start gap-3 text-xs">
+            <Wind className="h-5 w-5 text-sky-600 dark:text-sky-400 flex-shrink-0 mt-0.5" />
+            <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+              <strong className="text-slate-900 dark:text-white">Normativa Termomecánica Argentina (CACAAV):</strong> El aire acondicionado enfría un <strong className="text-sky-700 dark:text-sky-300">volumen de aire (m³)</strong> y no solo el piso. En el siguiente paso ajustaremos la orientación solar, el tipo de techo y los metros de cañería para obtener el equipo comercial exacto y el costo de instalación.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Botón Continuar */}
       <div className="flex justify-end pt-4">
         <button
           type="button"
           onClick={onNextStep}
-          className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#ff6a00] to-[#ea580c] px-8 py-3.5 text-sm font-extrabold text-white shadow-[0_0_25px_-5px_rgba(255,106,0,0.5)] transition-all hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+          className={`flex items-center gap-2 rounded-2xl px-8 py-3.5 text-sm font-extrabold text-white transition-all hover:scale-[1.03] active:scale-[0.98] cursor-pointer ${
+            isAc
+              ? 'bg-gradient-to-r from-sky-500 to-blue-600 shadow-[0_0_25px_-5px_rgba(14,165,233,0.5)]'
+              : 'bg-gradient-to-r from-[#ff6a00] to-[#ea580c] shadow-[0_0_25px_-5px_rgba(255,106,0,0.5)]'
+          }`}
         >
           <span>
-            {isRejas
+            {isAc
+              ? 'Siguiente: Sol, Techo & Instalación'
+              : isRejas
               ? 'Siguiente: Estado de la Reja o Portón & Óxido'
               : 'Siguiente: Estado de Paredes & Dificultades'}
           </span>
@@ -609,7 +895,7 @@ export function StepRooms({ inputs, onChangeInputs, onNextStep }) {
       </div>
 
       {/* Modal Instructivo para Paredes */}
-      {!isRejas && (
+      {!isRejas && !isAc && (
         <RoomMeasureModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}

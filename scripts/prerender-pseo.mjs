@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PSEO_PAGES } from '../src/config/pseo.config.js';
-import { FAQS_DATA } from '../src/data/faqs.data.js';
+import { FAQS_DATA, AC_FAQS_DATA } from '../src/data/faqs.data.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,7 +17,21 @@ if (!fs.existsSync(templatePath)) {
   process.exit(1);
 }
 
-const baseHtml = fs.readFileSync(templatePath, 'utf-8');
+const FAVICON_TAGS_BLOCK = [
+  '<link rel="icon" type="image/svg+xml" href="/favicon.svg" />',
+  '<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />',
+  '<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />',
+  '<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />',
+  '<link rel="manifest" href="/site.webmanifest" />'
+].join('\n    ');
+
+let baseHtml = fs.readFileSync(templatePath, 'utf-8');
+if (baseHtml.includes('href="data:image/svg+xml')) {
+  baseHtml = baseHtml.replace(
+    /<link\s+rel="icon"\s+type="image\/svg\+xml"\s+href="data:image\/svg\+xml[^"]*"\s*\/?>/i,
+    FAVICON_TAGS_BLOCK
+  );
+}
 
 /**
  * Genera el marcado Schema.org JSON-LD específico para la página
@@ -48,11 +62,13 @@ function buildJsonLdScripts(page = null) {
     creator: {
       '@type': 'Organization',
       name: 'KalkulAR',
-      url: 'https://kalkular.com/'
+      url: 'https://kalkular.com/',
+      logo: 'https://kalkular.com/favicon-96x96.png'
     }
   };
 
-  const faqsToUse = page?.seoContent?.faqs || FAQS_DATA;
+  const isAc = page?.calculatorPreset?.jobCategory === 'ac';
+  const faqsToUse = page?.seoContent?.faqs || (isAc ? AC_FAQS_DATA : FAQS_DATA);
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -76,11 +92,20 @@ function buildJsonLdScripts(page = null) {
   ];
 
   if (page) {
+    const categoryLabel =
+      page.category === 'precios'
+        ? 'Precios Mano de Obra'
+        : page.category === 'guia'
+        ? 'Guías Técnicas de Climatización'
+        : page.category === 'herramienta'
+        ? 'Calculadoras Técnicas'
+        : 'Presupuestos por Ambiente';
+
     breadcrumbElements.push(
       {
         '@type': 'ListItem',
         position: 2,
-        name: page.category === 'precios' ? 'Precios Mano de Obra' : 'Presupuestos por Ambiente',
+        name: categoryLabel,
         item: 'https://kalkular.com/#presupuestos-frecuentes'
       },
       {
@@ -117,6 +142,20 @@ function buildJsonLdScripts(page = null) {
  */
 function generateStaticBodyForPseo(page) {
   const { quickAnswer, metrics, editorialParagraphs, faqs } = page.seoContent;
+  const isAc = page.calculatorPreset?.jobCategory === 'ac';
+
+  const accentHex = isAc ? '#0284c7' : '#ea580c';
+  const badgeBg = isAc ? '#f0f9ff' : '#fff7ed';
+  const badgeBorder = isAc ? '#bae6fd' : '#fed7aa';
+  const summaryBg = isAc ? '#f0f9ff' : '#fffaf0';
+  const summaryBorder = isAc ? '#bae6fd' : '#ffedd5';
+  const summaryTitleColor = isAc ? '#0369a1' : '#c2410c';
+  const ctaBg = isAc ? '#0284c7' : '#ff6a00';
+
+  const surfaceValue =
+    typeof metrics.totalM2 === 'number'
+      ? `${metrics.totalM2} m²`
+      : metrics.totalM2 || metrics.linearMetersEquiv || 'A medida';
 
   const faqsHtml = faqs.map(f => `
     <article style="margin-bottom: 1.25rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
@@ -132,7 +171,7 @@ function generateStaticBodyForPseo(page) {
   return `
     <div id="seo-static-container" style="max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
       <header style="text-align: center; margin-bottom: 2.5rem;">
-        <span style="display: inline-block; background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">
+        <span style="display: inline-block; background: ${badgeBg}; color: ${accentHex}; border: 1px solid ${badgeBorder}; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">
           ${page.badge} · Precios Testigo 2026
         </span>
         <h1 style="font-size: 2.25rem; font-weight: 900; color: #0f172a; line-height: 1.2; margin: 0 0 1rem 0;">
@@ -143,9 +182,9 @@ function generateStaticBodyForPseo(page) {
         </p>
       </header>
 
-      <section style="background: #fffaf0; border: 2px solid #ffedd5; border-radius: 1.25rem; padding: 1.5rem; margin-bottom: 2.5rem;">
-        <h2 style="font-size: 0.85rem; font-weight: 800; color: #c2410c; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 0.5rem 0;">
-          Resumen Ejecutivo · Costos en Argentina
+      <section style="background: ${summaryBg}; border: 2px solid ${summaryBorder}; border-radius: 1.25rem; padding: 1.5rem; margin-bottom: 2.5rem;">
+        <h2 style="font-size: 0.85rem; font-weight: 800; color: ${summaryTitleColor}; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 0.5rem 0;">
+          ${isAc ? 'Resumen Ejecutivo · Climatización y Tarifas CACAAV' : 'Resumen Ejecutivo · Costos en Argentina'}
         </h2>
         <p style="font-size: 1.05rem; font-weight: 500; color: #1e293b; line-height: 1.6; margin: 0;">
           ${quickAnswer}
@@ -154,24 +193,24 @@ function generateStaticBodyForPseo(page) {
 
       <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2.5rem;">
         <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1.25rem; text-align: center;">
-          <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Superficie / Metros</span>
-          <p style="font-size: 1.5rem; font-weight: 900; color: #0f172a; margin: 0.25rem 0;">${metrics.totalM2 ? `${metrics.totalM2} m²` : (metrics.linearMetersEquiv || 'A medida')}</p>
-          <span style="font-size: 0.75rem; color: #94a3b8;">Total a pintar</span>
+          <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">${isAc ? 'Dimensiones / Volumen' : 'Superficie / Metros'}</span>
+          <p style="font-size: 1.5rem; font-weight: 900; color: #0f172a; margin: 0.25rem 0;">${surfaceValue}</p>
+          <span style="font-size: 0.75rem; color: #94a3b8;">${isAc ? 'Parámetro térmico' : 'Total a pintar'}</span>
         </div>
         <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1.25rem; text-align: center;">
-          <span style="font-size: 0.75rem; font-weight: 700; color: #ea580c; text-transform: uppercase;">Mano de Obra Justa</span>
-          <p style="font-size: 1.5rem; font-weight: 900; color: #ea580c; margin: 0.25rem 0;">${metrics.laborFairPrice}</p>
+          <span style="font-size: 0.75rem; font-weight: 700; color: ${accentHex}; text-transform: uppercase;">${isAc ? 'Mano de Obra CACAAV' : 'Mano de Obra Justa'}</span>
+          <p style="font-size: 1.5rem; font-weight: 900; color: ${accentHex}; margin: 0.25rem 0;">${metrics.laborFairPrice}</p>
           <span style="font-size: 0.75rem; color: #94a3b8;">Rango: ${metrics.laborRange}</span>
         </div>
         <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1.25rem; text-align: center;">
-          <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Pintura Necesaria</span>
+          <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">${isAc ? 'Equipo Recomendado' : 'Pintura Necesaria'}</span>
           <p style="font-size: 1.1rem; font-weight: 900; color: #0f172a; margin: 0.25rem 0;">${metrics.paintLiters}</p>
-          <span style="font-size: 0.75rem; color: #94a3b8;">2 manos completas</span>
+          <span style="font-size: 0.75rem; color: #94a3b8;">${isAc ? 'Capacidad comercial' : '2 manos completas'}</span>
         </div>
         <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1.25rem; text-align: center;">
-          <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Tiempo Estimado</span>
+          <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">${isAc ? 'Tiempo de Instalación' : 'Tiempo Estimado'}</span>
           <p style="font-size: 1.5rem; font-weight: 900; color: #0f172a; margin: 0.25rem 0;">${metrics.estimatedDays}</p>
-          <span style="font-size: 0.75rem; color: #94a3b8;">Pintor calificado</span>
+          <span style="font-size: 0.75rem; color: #94a3b8;">${isAc ? 'Técnico matriculado' : 'Pintor calificado'}</span>
         </div>
       </section>
 
@@ -190,8 +229,8 @@ function generateStaticBodyForPseo(page) {
       </section>
 
       <footer style="text-align: center; padding: 1.5rem 0;">
-        <a href="/" style="display: inline-block; background: #ff6a00; color: #ffffff; font-weight: 800; font-size: 0.95rem; text-decoration: none; padding: 0.85rem 1.75rem; border-radius: 0.75rem;">
-          Calcular Presupuesto con Medidas Personalizadas
+        <a href="${isAc ? '/calculadora-frigorias-aire-acondicionado' : '/'}" style="display: inline-block; background: ${ctaBg}; color: #ffffff; font-weight: 800; font-size: 0.95rem; text-decoration: none; padding: 0.85rem 1.75rem; border-radius: 0.75rem;">
+          ${isAc ? 'Calcular Frigorías e Instalación con Medidas Personalizadas' : 'Calcular Presupuesto con Medidas Personalizadas'}
         </a>
       </footer>
     </div>
@@ -284,8 +323,8 @@ const sitemapUrls = [
   { loc: 'https://kalkular.com/', priority: '1.0', changefreq: 'weekly' },
   ...PSEO_PAGES.map(p => ({
     loc: `https://kalkular.com${p.path}`,
-    priority: p.category === 'precios' ? '0.9' : '0.8',
-    changefreq: p.category === 'precios' ? 'weekly' : 'monthly'
+    priority: p.category === 'precios' || p.category === 'herramienta' ? '0.9' : '0.8',
+    changefreq: p.category === 'precios' || p.category === 'herramienta' ? 'weekly' : 'monthly'
   }))
 ];
 
@@ -302,6 +341,6 @@ ${sitemapUrls.map(u => `  <url>
 
 fs.writeFileSync(sitemapPath, sitemapContent, 'utf-8');
 fs.writeFileSync(publicSitemapPath, sitemapContent, 'utf-8');
-console.log('  ✅ sitemap.xml actualizado en dist/ y public/ con las 13 URLs canónicas.');
+console.log(`  ✅ sitemap.xml actualizado en dist/ y public/ con las ${sitemapUrls.length} URLs canónicas.`);
 
 console.log(`\n🎉 Pre-renderizado SSG finalizado con éxito: ${generatedCount} páginas programáticas generadas en dist/.`);

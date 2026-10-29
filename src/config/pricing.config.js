@@ -434,3 +434,300 @@ export const REJAS_PRICING_CONFIG = {
   }
 };
 
+/**
+ * Configuración Especializada para Climatización, Cálculo de Frigorías
+ * y Mano de Obra de Instalación de Aires Acondicionados Split (Temporada 2026/2027)
+ * Relevamiento validado según lineamientos técnicos CACAAV y Mercado Libre Argentina.
+ */
+export const AC_PRICING_CONFIG = {
+  currency: 'ARS',
+  currencySymbol: '$',
+  usdRateEstimate: 1250,
+
+  // Parámetros físicos de Balance Térmico (Normativa Argentina)
+  thermalConstants: {
+    baseFrigoriasPerM3: 50, // Estándar nacional (equiv. a 125 fg/m2 con H=2.5m)
+    wattsPerFrigoria: 1.163, // 1 fg = 1.163 W | 1 W = 0.86 fg
+    standardIncludedPipeMeters: 3,
+
+    // Multiplicadores por tipo de techo / cubierta superior
+    roofMultipliers: {
+      slab_covered: {
+        id: 'slab_covered',
+        label: 'Losa con otro piso arriba',
+        badge: 'Aislado (0%)',
+        description: 'Departamento en piso intermedio o planta baja con piso superior construido.',
+        percent: 0.00,
+        tagColor: 'emerald'
+      },
+      slab_exposed: {
+        id: 'slab_exposed',
+        label: 'Último piso / Losa expuesta al sol',
+        badge: 'Terraza (+15%)',
+        description: 'Techo de hormigón o terraza que recibe radiación solar directa todo el día.',
+        percent: 0.15,
+        tagColor: 'amber'
+      },
+      sheet_wood_roof: {
+        id: 'sheet_wood_roof',
+        label: 'Techo de chapa o machimbre',
+        badge: 'Alta carga (+25%)',
+        description: 'Cubierta liviana de chapa, tejas o madera con baja inercia térmica.',
+        percent: 0.25,
+        tagColor: 'rose'
+      }
+    },
+
+    // Multiplicadores por orientación solar y aberturas
+    sunMultipliers: {
+      low_south: {
+        id: 'low_south',
+        label: 'Sombra / Orientación Sur o Este',
+        badge: 'Normal (0%)',
+        description: 'Sin sol fuerte por la tarde y con ventanas de tamaño estándar.',
+        percent: 0.00
+      },
+      direct_north_west: {
+        id: 'direct_north_west',
+        label: 'Sol directo de tarde (Norte / Oeste) o Ventanal',
+        badge: 'Sol fuerte (+15%)',
+        description: 'Recibe sol intenso entre las 13 y 19 hs o posee amplios ventanales / balcón.',
+        percent: 0.15
+      }
+    },
+
+    // Cargas térmicas internas adicionales (Suma en Frigorías)
+    internalLoads: {
+      extraPeople: {
+        id: 'extraPeople',
+        label: 'Alta ocupación (+3 personas habituales)',
+        description: 'Suma +450 frigorías (150 fg por persona adicional sobre la base de 2 ocupantes).',
+        addedFrigorias: 450,
+        perPersonFrigorias: 150
+      },
+      integratedKitchen: {
+        id: 'integratedKitchen',
+        label: 'Cocina integrada / Heladera u horno en el ambiente',
+        description: 'Compensa el calor continuo del motor de la heladera y vapores de cocción (+350 fg).',
+        addedFrigorias: 350
+      },
+      heavyElectronics: {
+        id: 'heavyElectronics',
+        label: 'Oficina / PC Gamer / Iluminación comercial',
+        description: 'Compensa fuentes de computadoras, monitores múltiples o vidrieras (+250 fg).',
+        addedFrigorias: 250
+      }
+    }
+  },
+
+  // Escalones Comerciales Estándar en Argentina y Tarifas de Mano de Obra Básica (CACAAV 2026/2027)
+  commercialCapacities: [
+    {
+      id: 'split_2250',
+      maxCalculatedFrigorias: 2450,
+      commercialFrigorias: 2250,
+      commercialFrigoriasLabel: '2.250 a 2.300 Frigorías',
+      commercialWattsLabel: '2.600W - 2.750W',
+      nominalWatts: 2650,
+      pipeDiameters: '1/4" y 3/8"',
+      bracketSize: '42 cm',
+      BreakerAmps: '16A (Toma 10A/20A)',
+      extraPipeMeterRate: 35000,
+      laborRates: {
+        min: 125000,
+        recommended: 155000,
+        max: 195000
+      },
+      kitProductKey: 'kitInstalacion14_38',
+      splitProductKey: 'acSplit2250',
+      estimatedEquipmentCost: 860000,
+      estimatedKitCost: 94000
+    },
+    {
+      id: 'split_3000',
+      maxCalculatedFrigorias: 3350,
+      commercialFrigorias: 3000,
+      commercialFrigoriasLabel: '3.000 Frigorías',
+      commercialWattsLabel: '3.400W - 3.550W',
+      nominalWatts: 3500,
+      pipeDiameters: '1/4" y 3/8"',
+      bracketSize: '42 cm',
+      BreakerAmps: '16A (Toma 20A)',
+      extraPipeMeterRate: 35000,
+      laborRates: {
+        min: 125000,
+        recommended: 155000,
+        max: 195000
+      },
+      kitProductKey: 'kitInstalacion14_38',
+      splitProductKey: 'acSplit3000',
+      estimatedEquipmentCost: 960000,
+      estimatedKitCost: 94000
+    },
+    {
+      id: 'split_4500',
+      maxCalculatedFrigorias: 4850,
+      commercialFrigorias: 4500,
+      commercialFrigoriasLabel: '4.500 Frigorías',
+      commercialWattsLabel: '5.100W - 5.300W',
+      nominalWatts: 5200,
+      pipeDiameters: '1/4" y 1/2"',
+      bracketSize: '52 cm reforzada',
+      BreakerAmps: '20A (Toma 20A)',
+      extraPipeMeterRate: 44000,
+      laborRates: {
+        min: 155000,
+        recommended: 190000,
+        max: 240000
+      },
+      kitProductKey: 'kitInstalacion14_12',
+      splitProductKey: 'acSplit4500',
+      estimatedEquipmentCost: 1450000,
+      estimatedKitCost: 115000
+    },
+    {
+      id: 'split_6000',
+      maxCalculatedFrigorias: 99999,
+      commercialFrigorias: 6000,
+      commercialFrigoriasLabel: '5.500 a 6.000 Frigorías',
+      commercialWattsLabel: '6.300W - 7.000W',
+      nominalWatts: 6500,
+      pipeDiameters: '1/4" y 1/2" (o 5/8")',
+      bracketSize: '52 cm reforzada',
+      BreakerAmps: '25A (Línea dedicada)',
+      extraPipeMeterRate: 44000,
+      laborRates: {
+        min: 185000,
+        recommended: 225000,
+        max: 280000
+      },
+      kitProductKey: 'kitInstalacion14_12',
+      splitProductKey: 'acSplit6000',
+      estimatedEquipmentCost: 1820000,
+      estimatedKitCost: 115000
+    }
+  ],
+
+  // Adicionales de Dificultad en Obra (Paso 2 del Wizard)
+  installationSurcharges: {
+    heightWork: {
+      id: 'heightWork',
+      label: 'Trabajo en altura / Al vacío (2do piso o superior sin balcón)',
+      description: 'Colocación de unidad exterior sobre fachada al vacío con arnés de seguridad, silleta o escalera extensible.',
+      fixedPrice: 65000
+    },
+    concreteWallPass: {
+      id: 'concreteWallPass',
+      label: 'Pase de viga o pared de hormigón / Ladrillo macizo 30cm',
+      description: 'Perforación de alta dureza con mecha copa diamantada en muro portante de 30cm o tabique de hormigón.',
+      fixedPrice: 38000
+    },
+    ductingOrPreinstall: {
+      id: 'ductingOrPreinstall',
+      label: 'Cablecanal estético PVC o Conexión en pre-instalación embutida',
+      description: 'Provisión y montaje de conducto cablecanal estético o nitrógeno/limpieza para conectar sobre caja de pre-instalación.',
+      fixedPrice: 42000
+    },
+    removeOldUnit: {
+      id: 'removeOldUnit',
+      label: 'Desinstalación de equipo viejo (con recupero de gas)',
+      description: 'Envasado ecológico del refrigerante en el compresor (pump down), desmonte del equipo anterior y retiro de ménsulas.',
+      fixedPrice: 85000
+    },
+    dedicatedElectricLine: {
+      id: 'dedicatedElectricLine',
+      label: 'Toma eléctrico dedicado de 20A con llave térmica',
+      description: 'Mano de obra por tendido de línea eléctrica dedicada de hasta 5m, colocación de caja exterior, térmica bipolar y toma 20A.',
+      fixedPrice: 58000,
+      requiresElectricKit: true
+    }
+  },
+
+  // Precios referenciales de accesorios eléctricos y kits para el desglose
+  materialEstimatedPrices: {
+    kitInstalacion14_38: 94000,
+    kitInstalacion14_12: 115000,
+    protectorTension20A: 35000,
+    kitElectricoToma20A: 21000
+  },
+
+  // Los 6 Presets de Ambientes para el Paso 1 (StepRooms.jsx)
+  presetRooms: [
+    {
+      id: 'ac_bedroom_small',
+      name: 'Dormitorio Chico',
+      dimensions: '3m x 3m (9 m² · 2.5m alto)',
+      length: 3.0,
+      width: 3.0,
+      height: 2.5,
+      defaultRoof: 'slab_covered',
+      defaultSun: 'low_south',
+      description: 'Dormitorio individual, cuarto infantil o escritorio tranquilo.',
+      badge: '2250 fg ideal'
+    },
+    {
+      id: 'ac_bedroom_medium',
+      name: 'Dormitorio Estándar / Estudio',
+      dimensions: '4m x 3.5m (14 m² · 2.5m alto)',
+      length: 4.0,
+      width: 3.5,
+      height: 2.5,
+      defaultRoof: 'slab_covered',
+      defaultSun: 'low_south',
+      description: 'Dormitorio matrimonial estándar o consultorio profesional.',
+      badge: 'Más común'
+    },
+    {
+      id: 'ac_living_medium',
+      name: 'Living Comedor',
+      dimensions: '5m x 4m (20 m² · 2.6m alto)',
+      length: 5.0,
+      width: 4.0,
+      height: 2.6,
+      defaultRoof: 'slab_covered',
+      defaultSun: 'direct_north_west',
+      description: 'Sala de estar y comedor familiar con puerta balcón o ventanal.',
+      badge: 'Popular'
+    },
+    {
+      id: 'ac_quincho_mono',
+      name: 'Monoambiente / Quincho',
+      dimensions: '6m x 5m (30 m² · 2.6m alto)',
+      length: 6.0,
+      width: 5.0,
+      height: 2.6,
+      defaultRoof: 'slab_exposed',
+      defaultSun: 'direct_north_west',
+      defaultKitchen: true,
+      description: 'Espacio integrado con cocina, heladera, parrilla o reuniones.',
+      badge: 'Espacioso'
+    },
+    {
+      id: 'ac_commercial',
+      name: 'Local Comercial / Oficina',
+      dimensions: '7m x 5m (35 m² · 3.0m alto)',
+      length: 7.0,
+      width: 5.0,
+      height: 3.0,
+      defaultRoof: 'slab_exposed',
+      defaultSun: 'direct_north_west',
+      defaultElectronics: true,
+      description: 'Local con vidriera, oficina grupal o salón de atención al público.',
+      badge: 'Comercial'
+    },
+    {
+      id: 'ac_custom',
+      name: 'Medidas Personalizadas',
+      dimensions: 'Ingresá tus m² o Largo x Ancho x Alto',
+      length: 4.0,
+      width: 4.0,
+      height: 2.5,
+      defaultRoof: 'slab_covered',
+      defaultSun: 'low_south',
+      description: 'Calculá las frigorías y el costo de instalación para cualquier medida.',
+      badge: 'A medida'
+    }
+  ]
+};
+
+

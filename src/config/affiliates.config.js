@@ -18,9 +18,142 @@ export const BRAND_AFFILIATE_LINKS = {
   casablanca: 'https://meli.la/2JzL2rN'
 };
 
+/**
+ * Enlaces de afiliados a Tiendas Oficiales de Climatización en Mercado Libre Argentina
+ */
+export const AC_BRAND_AFFILIATE_LINKS = {
+  bgh: 'https://meli.la/1uVyRfb',
+  surrey: 'https://meli.la/2zU6mxj',
+  philco: 'https://meli.la/1NKC96f',
+  samsung: 'https://meli.la/29fi5sd',
+  lg: 'https://meli.la/29fi5sd',
+  sansei: 'https://meli.la/1NKC96f'
+};
+
+/**
+ * Nuevos objetos de producto para insertar dentro de AFFILIATES_CONFIG.products
+ */
+export const AC_AFFILIATE_PRODUCTS = {
+  // CATEGORÍA A: EQUIPOS SPLIT RECOMENDADOS (ALTO TICKET)
+  acSplit2250: {
+    id: 'acSplit2250',
+    name: 'Aire Acondicionado Split Frío/Calor 2250 a 2300 Frigorías (2600W)',
+    brand: 'BGH Silent Air / Philco / Sansei / Surrey',
+    tagline: 'Ideal para dormitorios de hasta 15 m². Disponible en tecnología Inverter (35% menos consumo) u On/Off.',
+    rating: 4.9,
+    reviewsCount: 4820,
+    estimatedPrice: '$750.000 - $1.050.000',
+    badge: 'Ideal Dormitorio 🏆',
+    category: 'Equipo Recomendado',
+    affiliateUrl: 'https://meli.la/2PrpbS6',
+    image: 'https://images.unsplash.com/photo-1631545806609-35d4ae490431?w=400&auto=format&fit=crop&q=80'
+  },
+
+  acSplit3000: {
+    id: 'acSplit3000',
+    name: 'Aire Acondicionado Split Frío/Calor 3000 Frigorías (3400W - 3550W)',
+    brand: 'BGH Silent Air / Surrey / Philco / Samsung / LG',
+    tagline: 'El equipo más vendido de Argentina para dormitorios grandes y estudios de 15 a 22 m². Eficiencia A++.',
+    rating: 4.9,
+    reviewsCount: 6390,
+    estimatedPrice: '$820.000 - $1.180.000',
+    badge: 'Más Vendido 🏆',
+    category: 'Equipo Recomendado',
+    affiliateUrl: 'https://meli.la/22vFMoP',
+    image: 'https://images.unsplash.com/photo-1631545806609-35d4ae490431?w=400&auto=format&fit=crop&q=80'
+  },
+
+  acSplit4500: {
+    id: 'acSplit4500',
+    name: 'Aire Acondicionado Split Frío/Calor 4500 Frigorías (5100W - 5300W)',
+    brand: 'Surrey / BGH Silent Air / Philco / Samsung',
+    tagline: 'Alto caudal de aire para livings comedores, monoambientes y espacios de 23 a 34 m².',
+    rating: 4.8,
+    reviewsCount: 3150,
+    estimatedPrice: '$1.250.000 - $1.750.000',
+    badge: 'Potencia Living ⚡',
+    category: 'Equipo Recomendado',
+    affiliateUrl: 'https://meli.la/246pDcM',
+    image: 'https://images.unsplash.com/photo-1631545806609-35d4ae490431?w=400&auto=format&fit=crop&q=80'
+  },
+
+  acSplit6000: {
+    id: 'acSplit6000',
+    name: 'Aire Acondicionado Split Frío/Calor 5500 a 6000 Frigorías (6500W)',
+    brand: 'Surrey / BGH / Philco / Carrier / LG',
+    tagline: 'Máxima potencia frigorífica para quinchos, salones grandes, oficinas y locales de hasta 48 m².',
+    rating: 4.8,
+    reviewsCount: 1890,
+    estimatedPrice: '$1.550.000 - $2.200.000',
+    badge: 'Máxima Capacidad 🏢',
+    category: 'Equipo Recomendado',
+    affiliateUrl: 'https://meli.la/1JKL1Ur',
+    image: 'https://images.unsplash.com/photo-1631545806609-35d4ae490431?w=400&auto=format&fit=crop&q=80'
+  },
+
+  // CATEGORÍA B: KITS DE INSTALACIÓN COMPLETOS (COMPRA IMPULSIVA)
+  kitInstalacion14_38: {
+    id: 'kitInstalacion14_38',
+    name: 'Kit Instalación Aire Acondicionado 3m (Caños 1/4" y 3/8") + Ménsulas',
+    brand: 'Eluma / Termomecánica / Cobre Puro Normalizado',
+    tagline: '3m caño cobre 1/4 y 3/8 + aislantes negros + ménsulas epoxi 42cm con tirafondos + cable 5x1.5mm + manguera y cinta.',
+    rating: 4.8,
+    reviewsCount: 5420,
+    estimatedPrice: '$82.000 - $112.000',
+    badge: 'Combo Completo 2250/3000fg ⭐',
+    category: 'Kit de Instalación',
+    affiliateUrl: 'https://meli.la/13qh8SX',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&auto=format&fit=crop&q=80'
+  },
+
+  kitInstalacion14_12: {
+    id: 'kitInstalacion14_12',
+    name: 'Kit Instalación Aire Acondicionado 3m (Caños 1/4" y 1/2") + Ménsulas 52cm',
+    brand: 'Eluma / Termomecánica / Cobre Puro Normalizado',
+    tagline: 'Especial para 4500 a 6000 fg: 3m caño cobre 1/4 y 1/2 + aislantes + ménsulas reforzadas 52cm + cable TPR 5x1.5mm + cinta.',
+    rating: 4.8,
+    reviewsCount: 2890,
+    estimatedPrice: '$98.000 - $135.000',
+    badge: 'Combo 4500/6000fg 🛠️',
+    category: 'Kit de Instalación',
+    affiliateUrl: 'https://meli.la/1FHZCAy',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&auto=format&fit=crop&q=80'
+  },
+
+  // CATEGORÍA C: PROTECCIÓN ELÉCTRICA (CROSS-SELLING)
+  protectorTension20A: {
+    id: 'protectorTension20A',
+    name: 'Protector de Alta y Baja Tensión Digital 20A para Aire Acondicionado',
+    brand: 'TRV Smart20 Pro / BAW / Sica / TBCin',
+    tagline: 'Enchufable de 20 Amperes con pantalla digital y retardo de reconexión. Protege la placa Inverter contra cortes y baja tensión.',
+    rating: 4.9,
+    reviewsCount: 7850,
+    estimatedPrice: '$28.000 - $42.000',
+    badge: 'Indispensable en Verano 🛡️',
+    category: 'Protección Eléctrica',
+    affiliateUrl: 'https://meli.la/2QLYZpY',
+    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&auto=format&fit=crop&q=80'
+  },
+
+  kitElectricoToma20A: {
+    id: 'kitElectricoToma20A',
+    name: 'Kit Llave Térmica Bipolar 20A + Caja Exterior + Toma 20A Aire',
+    brand: 'Schneider Electric / Sica / BAW / Cambre',
+    tagline: 'Conjunto eléctrico reglamentario para independizar el circuito del aire acondicionado y evitar recalentamiento de enchufes.',
+    rating: 4.8,
+    reviewsCount: 1620,
+    estimatedPrice: '$16.000 - $26.000',
+    badge: 'Línea Dedicada ⚡',
+    category: 'Instalación Eléctrica',
+    affiliateUrl: 'https://meli.la/32nK9Me',
+    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&auto=format&fit=crop&q=80'
+  }
+};
+
 export const AFFILIATES_CONFIG = {
   // Enlaces centralizados de marcas líderes
   brands: BRAND_AFFILIATE_LINKS,
+  acBrands: AC_BRAND_AFFILIATE_LINKS,
 
   // Configuración global de afiliado
   affiliateTag: 'kalkular-20', // Tu tag o ID de afiliado de Mercado Libre
@@ -303,6 +436,9 @@ export const AFFILIATES_CONFIG = {
       category: 'Herramientas',
       affiliateUrl: 'https://meli.la/2TLWDku',
       image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&auto=format&fit=crop&q=80'
-    }
+    },
+
+    // 19-26. Equipos Split, Kits de Instalación y Protección Eléctrica (Climatización)
+    ...AC_AFFILIATE_PRODUCTS
   }
 };

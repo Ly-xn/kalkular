@@ -1,11 +1,14 @@
 import React from 'react';
-import { FAQS_DATA } from '../../data/faqs.data.js';
+import { FAQS_DATA, AC_FAQS_DATA } from '../../data/faqs.data.js';
 
-export function JsonLdSchema({ pseoPage }) {
+export function JsonLdSchema({ pseoPage, isAcMode = false }) {
+  const isAc = isAcMode || pseoPage?.calculatorPreset?.jobCategory === 'ac';
   const currentUrl = pseoPage ? `https://kalkular.com${pseoPage.path}` : 'https://kalkular.com/';
   const appName = pseoPage ? `${pseoPage.h1} | KalkulAR` : 'KalkulAR';
   const appDescription = pseoPage
     ? pseoPage.metaDescription
+    : isAc
+    ? 'Calculadora técnica de frigorías por m³ y costo de instalación de aire acondicionado Split en Argentina (2026/2027) según tarifario CACAAV.'
     : 'Calculadora técnica de pintura y presupuestos de mano de obra por m² en Argentina (2026). Cálculo preciso de litros de pintura, insumos y costos testigo de pintores.';
 
   const webAppSchema = {
@@ -27,12 +30,13 @@ export function JsonLdSchema({ pseoPage }) {
     creator: {
       '@type': 'Organization',
       name: 'KalkulAR',
-      url: 'https://kalkular.com/'
+      url: 'https://kalkular.com/',
+      logo: 'https://kalkular.com/favicon-96x96.png'
     }
   };
 
-  // FAQ Schema: si es una página pSEO, usar sus 3 FAQs específicas, si no, las 10 generales
-  const faqsToUse = pseoPage?.seoContent?.faqs || FAQS_DATA;
+  // FAQ Schema: si es una página pSEO, usar sus FAQs específicas; si no, las 10 generales según categoría
+  const faqsToUse = pseoPage?.seoContent?.faqs || (isAc ? AC_FAQS_DATA : FAQS_DATA);
 
   const faqSchema = {
     '@context': 'https://schema.org',
@@ -57,11 +61,20 @@ export function JsonLdSchema({ pseoPage }) {
   ];
 
   if (pseoPage) {
+    const categoryLabel =
+      pseoPage.category === 'precios'
+        ? 'Precios Mano de Obra'
+        : pseoPage.category === 'guia'
+        ? 'Guías Técnicas de Climatización'
+        : pseoPage.category === 'herramienta'
+        ? 'Calculadoras Técnicas'
+        : 'Presupuestos por Ambiente';
+
     breadcrumbElements.push(
       {
         '@type': 'ListItem',
         position: 2,
-        name: pseoPage.category === 'precios' ? 'Precios Mano de Obra' : 'Presupuestos por Ambiente',
+        name: categoryLabel,
         item: 'https://kalkular.com/#presupuestos-frecuentes'
       },
       {

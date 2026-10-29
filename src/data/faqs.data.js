@@ -55,3 +55,59 @@ export const FAQS_DATA = [
     a: 'Podés descargar el presupuesto en PDF o enviarlo por WhatsApp con el desglose exacto de m² netos (restando puertas y ventanas) y el rango de costos testigo de mano de obra en ARS. Esto establece un marco de negociación técnico, transparente y objetivo donde ambas partes conocen las medidas reales y los rendimientos oficiales de fábrica.'
   }
 ];
+
+/**
+ * Base de datos de Preguntas Frecuentes (FAQ) de Climatización y Aires Acondicionados (2026/2027)
+ */
+export const AC_FAQS_DATA = [
+  {
+    id: 'calculo-frigorias-m2-m3-argentina',
+    q: '¿Cómo se calculan las frigorías de un aire acondicionado por metro cuadrado y cúbico?',
+    a: 'La fórmula técnica oficial empleada en Argentina multiplica el volumen de la habitación (Largo × Ancho × Alto en m³) por 50 frigorías/m³ (equivalente a 125 frigorías por m² en techos de 2.50m). Si el ambiente tiene losa expuesta en último piso (+15%), techo de chapa (+25%) o ventanal con sol directo del Norte u Oeste (+15%), se suman esos porcentajes para evitar que el compresor trabaje forzado.'
+  },
+  {
+    id: 'precio-instalacion-aire-acondicionado-2026',
+    q: '¿Cuánto cuesta la mano de obra para instalar un aire acondicionado en Argentina (2026/2027)?',
+    a: 'Según el tarifario referencial de CACAAV (Cámara Argentina de Calefacción, Aire Acondicionado y Ventilación), la mano de obra de instalación básica en 2026/2027 promedia $155.000 ARS para equipos de 2.250 a 3.000 frigorías, $190.000 ARS para 4.500 frigorías y $225.000 ARS para 6.000 frigorías. Este valor cubre el trabajo del técnico matriculado hasta 3 metros lineales de interconexión y vacío con bomba.'
+  },
+  {
+    id: 'que-incluye-kit-instalacion-3-metros',
+    q: '¿Qué incluye el kit de instalación de 3 metros de aire acondicionado?',
+    a: 'Un kit de instalación reglamentario de 3 metros incluye: 3 metros de caño de cobre de alta (1/4") y 3 metros de baja (3/8" o 1/2" según potencia), aislantes térmicos elastoméricos negros, 3.5 metros de cable subterráneo tipo taller TPR (5x1.5mm² o 5x2.5mm²), par de ménsulas pintadas en epoxi con tacos antivibratorios, manguera cristal de desagote, cinta PVC sin adhesivo y kit de tirafondos del 10.'
+  },
+  {
+    id: 'equivalencia-frigorias-a-watts',
+    q: '¿Cómo convertir frigorías a Watts (W) al comprar un aire acondicionado en Argentina?',
+    a: 'En Argentina las etiquetas de eficiencia IRAM expresan la potencia en Watts térmicos (W). Para pasar de frigorías a Watts se multiplica por 1.163 (y para pasar de Watts a frigorías se divide por 1.163). Las equivalencias comerciales son: 2.250 fg = 2.600W | 3.000 fg = 3.400W a 3.550W | 4.500 fg = 5.100W a 5.300W | 6.000 fg = 6.300W a 6.800W.'
+  },
+  {
+    id: 'por-que-exigen-3-metros-cano-y-bomba-vacio',
+    q: '¿Por qué las marcas exigen mínimo 3 metros de cañería de cobre y bomba de vacío?',
+    a: 'Fabricantes como BGH, Surrey, Samsung, LG y Philco exigen un recorrido mínimo de 2.5 a 3 metros de caño de cobre para amortiguar las vibraciones mecánicas del motocompresor y asegurar la correcta expansión del gas R410A/R32 (evitando ruidos o retorno de líquido). Además, el vacío con bomba mecánica durante 15 a 20 minutos extrae la humedad interna; omitirlo anula la garantía oficial.'
+  },
+  {
+    id: 'diferencia-consumo-inverter-vs-comun',
+    q: '¿Cuál es la diferencia de consumo eléctrico entre un aire Inverter y uno común (On/Off)?',
+    a: 'Un aire acondicionado con tecnología Inverter Clase A++ regula electrónicamente la velocidad del compresor en lugar de apagarlo y encenderlo con picos de arranque constantes. Esto genera un ahorro real del 35% al 40% en la factura de luz en usos de más de 4 horas diarias, mantiene la temperatura estable sin ráfagas heladas y alarga la vida útil del equipo.'
+  },
+  {
+    id: 'que-pasa-si-compro-menos-frigorias',
+    q: '¿Qué pasa si compro un aire acondicionado con menos frigorías de las necesarias?',
+    a: 'Un equipo subdimensionado nunca alcanza la temperatura seleccionada en días de más de 33°C, por lo que el compresor jamás corta y funciona al 100% sin descanso. Esto dispara el consumo eléctrico hasta un 40% más que un equipo de la capacidad correcta y provoca el desgaste prematuro o recalentamiento del motocompresor.'
+  },
+  {
+    id: 'costo-metro-adicional-cano-y-altura',
+    q: '¿Cuánto cuesta el metro adicional de caño de cobre y los trabajos en altura?',
+    a: 'Cuando la distancia entre la unidad interior y la exterior supera los 3 metros básicos, el metro lineal adicional completo (caño de cobre + aislante + cable TPR + mano de obra) cuesta entre $35.000 y $44.000 ARS/m según el diámetro. Los trabajos en altura al vacío o fachada sin balcón suman alrededor de $65.000 ARS y el pase de viga de hormigón $38.000 ARS.'
+  },
+  {
+    id: 'diametro-cano-segun-frigorias',
+    q: '¿Qué diámetro de caño de cobre lleva un aire de 2250, 3000, 4500 y 6000 frigorías?',
+    a: 'Los equipos Split de 2.250 y 3.000 frigorías (2600W a 3550W) utilizan caño de cobre de 1/4" (líquido) y 3/8" (succión) con ménsulas de 42 cm. En cambio, los equipos de 4.500 y 6.000 frigorías (5200W a 6500W) requieren caño de 1/4" y 1/2" (o 5/8" en algunos modelos de 6000 fg) y ménsulas reforzadas de 52 cm.'
+  },
+  {
+    id: 'proteccion-electrica-20a-aire-acondicionado',
+    q: '¿Es necesario instalar una llave térmica de 20A y protector de tensión?',
+    a: 'Sí. Los equipos Split modernos en Argentina vienen provistos con ficha de 20 Amperes (patas más anchas que el enchufe común de 10A). Nunca debe usarse un adaptador triple porque se derrite por recalentamiento; corresponde instalar un tomacorriente normado de 20A con llave térmica dedicada y un protector digital de alta/baja tensión para resguardar la plaqueta electrónica ante cortes de luz.'
+  }
+];

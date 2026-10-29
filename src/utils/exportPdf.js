@@ -11,7 +11,10 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   });
 
   const isRejas = quoteData.meta?.jobCategory === 'rejas';
+  const isAc = quoteData.meta?.jobCategory === 'ac';
   const primaryOrange = [255, 106, 0];
+  const primarySky = [14, 165, 233];
+  const accentColor = isAc ? primarySky : primaryOrange;
   const darkBg = [15, 23, 42];
   const grayText = [100, 116, 139];
 
@@ -19,20 +22,40 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFillColor(...darkBg);
   doc.rect(0, 0, 210, 38, 'F');
 
-  // Franja decorativa naranja
-  doc.setFillColor(...primaryOrange);
+  // Franja decorativa
+  doc.setFillColor(...accentColor);
   doc.rect(0, 38, 210, 3, 'F');
 
   // Logo / Título
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(20);
+  doc.setFontSize(18);
   doc.setTextColor(255, 255, 255);
-  doc.text(isRejas ? 'PRESUPUESTO HERRERÍA Y REJAS' : 'PRESUPUESTO DE PINTURA', 15, 20);
+  doc.text(
+    isAc
+      ? 'PRESUPUESTO CLIMATIZACIÓN Y FRIGORÍAS'
+      : isRejas
+      ? 'PRESUPUESTO HERRERÍA Y REJAS'
+      : 'PRESUPUESTO DE PINTURA',
+    15,
+    20
+  );
 
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(255, 180, 120);
-  doc.text(isRejas ? 'Tratamiento Anticorrosivo, Desoxidado & Esmalte 3 en 1' : 'Calculadora Inteligente de Obra & Materiales', 15, 27);
+  if (isAc) {
+    doc.setTextColor(125, 211, 252);
+  } else {
+    doc.setTextColor(255, 180, 120);
+  }
+  doc.text(
+    isAc
+      ? 'Balance Térmico CACAAV, Mano de Obra de Instalación & Equipos Split'
+      : isRejas
+      ? 'Tratamiento Anticorrosivo, Desoxidado & Esmalte 3 en 1'
+      : 'Calculadora Inteligente de Obra & Materiales',
+    15,
+    27
+  );
 
   // Metadata a la derecha
   doc.setFontSize(9);
@@ -43,11 +66,19 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
 
   let y = 52;
 
-  // Sección 1: Resumen de Superficie
+  // Sección 1: Resumen de Superficie / Balance Térmico
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(...darkBg);
-  doc.text(isRejas ? '1. Detalle de la Herrería y Dimensiones' : '1. Detalle del Ambiente y Metros Cuadrados', 15, y);
+  doc.text(
+    isAc
+      ? '1. Diagnóstico Termomecánico y Equipo Recomendado'
+      : isRejas
+      ? '1. Detalle de la Herrería y Dimensiones'
+      : '1. Detalle del Ambiente y Metros Cuadrados',
+    15,
+    y
+  );
   y += 7;
 
   doc.setDrawColor(220, 226, 235);
@@ -58,7 +89,26 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(51, 65, 85);
 
-  if (isRejas) {
+  if (isAc) {
+    doc.text(`Ambiente a climatizar:`, 20, y + 8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${quoteData.meta.roomLabel}`, 75, y + 8);
+
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Dimensiones térmicas:`, 20, y + 16);
+    doc.text(`${quoteData.surfaces.totalM2} m² de planta · Volumen: ${quoteData.surfaces.volumeM3} m³`, 75, y + 16);
+
+    doc.text(`Carga Térmica Calculada:`, 20, y + 23);
+    doc.text(
+      `${quoteData.thermal.exactFrigorias.toLocaleString('es-AR')} fg (${quoteData.thermal.exactWatts.toLocaleString('es-AR')} W) · Caños ${quoteData.materials.pipeDiameters}`,
+      75,
+      y + 23
+    );
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...accentColor);
+    doc.text(`Split ${quoteData.thermal.recommendedUnit.commercialFrigoriasLabel}`, 140, y + 8);
+  } else if (isRejas) {
     doc.text(`Herrería seleccionada:`, 20, y + 8);
     doc.setFont('helvetica', 'bold');
     doc.text(`${quoteData.meta.roomLabel}`, 75, y + 8);
@@ -96,7 +146,15 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(...darkBg);
-  doc.text(isRejas ? '2. Estimación de Mano de Obra Especializada en Herrería' : '2. Estimación de Mano de Obra Profesional', 15, y);
+  doc.text(
+    isAc
+      ? '2. Mano de Obra de Instalación Matriculada (Referencia CACAAV)'
+      : isRejas
+      ? '2. Estimación de Mano de Obra Especializada en Herrería'
+      : '2. Estimación de Mano de Obra Profesional',
+    15,
+    y
+  );
   y += 7;
 
   doc.roundedRect(15, y, 180, 36, 2, 2, 'FD');
@@ -114,7 +172,7 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.text(`$${quoteData.labor.min.toLocaleString('es-AR')}`, 25, y + 18);
 
   doc.setFontSize(16);
-  doc.setTextColor(...primaryOrange);
+  doc.setTextColor(...accentColor);
   doc.text(`$${quoteData.labor.recommended.toLocaleString('es-AR')}`, 78, y + 19);
 
   doc.setFontSize(13);
@@ -124,7 +182,15 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...grayText);
-  doc.text(`Tiempo estimado de trabajo: ${quoteData.labor.estimatedDays} días hábiles (${quoteData.labor.workforceAdvice})`, 25, y + 29);
+  if (isAc) {
+    doc.text(
+      `Cañería: ${quoteData.meta.acPipeMeters}m totales · Tiempo: ${quoteData.labor.estimatedHours || '3 a 5 hs'} (${quoteData.labor.workforceAdvice})`,
+      25,
+      y + 29
+    );
+  } else {
+    doc.text(`Tiempo estimado de trabajo: ${quoteData.labor.estimatedDays} días hábiles (${quoteData.labor.workforceAdvice})`, 25, y + 29);
+  }
 
   y += 46;
 
@@ -132,7 +198,15 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(...darkBg);
-  doc.text(isRejas ? '3. Materiales e Insumos para Herrería (Mercado Libre)' : '3. Lista de Materiales e Insumos Sugeridos (Mercado Libre)', 15, y);
+  doc.text(
+    isAc
+      ? '3. Equipo Split e Insumos de Instalación (Mercado Libre)'
+      : isRejas
+      ? '3. Materiales e Insumos para Herrería (Mercado Libre)'
+      : '3. Lista de Materiales e Insumos Sugeridos (Mercado Libre)',
+    15,
+    y
+  );
   y += 6;
 
   // Tabla simple de materiales
@@ -141,8 +215,8 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(30, 41, 59);
-  doc.text('Material / Insumo', 20, y + 5);
-  doc.text('Cantidad Calculada', 115, y + 5);
+  doc.text(isAc ? 'Equipo / Insumo Técnico' : 'Material / Insumo', 20, y + 5);
+  doc.text('Especificación / Cantidad', 115, y + 5);
   doc.text('Precio Aprox.', 165, y + 5);
   y += 8;
 
@@ -165,12 +239,20 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(...darkBg);
-  doc.text(`Costo estimado total de materiales: ~$${quoteData.materials.estimatedCost.toLocaleString('es-AR')} ARS`, 20, y);
+  if (isAc) {
+    doc.text(
+      `Costo estimado Kit Instalación: ~$${quoteData.materials.estimatedCost.toLocaleString('es-AR')} ARS | Equipo Split: ~$${(quoteData.materials.estimatedEquipmentCost || 0).toLocaleString('es-AR')} ARS`,
+      20,
+      y
+    );
+  } else {
+    doc.text(`Costo estimado total de materiales: ~$${quoteData.materials.estimatedCost.toLocaleString('es-AR')} ARS`, 20, y);
+  }
 
   y += 12;
 
   // Pie de página / Recomendaciones de Obra
-  doc.setDrawColor(255, 106, 0);
+  doc.setDrawColor(...accentColor);
   doc.setLineWidth(0.5);
   doc.line(15, y, 195, y);
   y += 6;
@@ -181,21 +263,25 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
   doc.text('• Este presupuesto es un documento estimativo basado en precios promedio de mercado y rendimientos estándar.', 15, y);
   y += 4.5;
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(190, 90, 10);
-  if (isRejas) {
+  if (isAc) {
+    doc.setTextColor(2, 132, 199);
+    doc.text('• GARANTÍA OFICIAL: Exigí vacío de cañería con bomba de vacío (15-20 min) y un mínimo de 3 metros de caño de cobre.', 15, y);
+  } else if (isRejas) {
+    doc.setTextColor(190, 90, 10);
     doc.text('• HERRERÍA: El 70% del valor de mano de obra corresponde al desoxidado, cepillado y lijado manual de barrotes.', 15, y);
   } else {
+    doc.setTextColor(190, 90, 10);
     doc.text('• AVISO DE COLOR: No incluye color de pintura ni entonadores; recomendamos que el cliente elija el tono en persona.', 15, y);
   }
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...grayText);
   y += 4.5;
-  doc.text('• Los enlaces a materiales de Mercado Libre garantizan productos compatibles con el metraje calculado.', 15, y);
+  doc.text('• Los enlaces a materiales de Mercado Libre garantizan productos compatibles con el cálculo técnico.', 15, y);
   y += 4.5;
-  doc.text('• Generado con KalkulAR | Calculadora de Presupuestos de Pintura | 100% Transparente y Gratuito.', 15, y);
+  doc.text('• Generado con KalkulAR | https://kalkular.com | 100% Transparente y Gratuito.', 15, y);
 
   // Descarga del PDF
-  const safeLabel = (quoteData.meta.roomLabel || 'Herreria').replace(/[^a-zA-Z0-9]/g, '_');
+  const safeLabel = (quoteData.meta.roomLabel || 'Obra').replace(/[^a-zA-Z0-9]/g, '_');
   const filename = `Presupuesto_KalkulAR_${safeLabel}_${Date.now().toString().slice(-4)}.pdf`;
   doc.save(filename);
 }
@@ -205,6 +291,27 @@ export function exportQuoteToPdf(quoteData, customerName = 'Cliente Particular')
  */
 export function buildWhatsAppShareUrl(quoteData) {
   const isRejas = quoteData.meta?.jobCategory === 'rejas';
+  const isAc = quoteData.meta?.jobCategory === 'ac';
+
+  if (isAc) {
+    const text = `❄️ *Presupuesto de Aire Acondicionado y Frigorías*\n` +
+      `📅 Fecha: ${quoteData.meta.dateCalculated}\n\n` +
+      `📍 *Ambiente:* ${quoteData.meta.roomLabel}\n` +
+      `📐 *Dimensiones:* ${quoteData.surfaces.totalM2} m² (${quoteData.surfaces.volumeM3} m³ de volumen)\n` +
+      `🌡️ *Carga Térmica Calculada:* ${quoteData.thermal.exactFrigorias.toLocaleString('es-AR')} Frigorías (${quoteData.thermal.exactWatts.toLocaleString('es-AR')} Watts)\n` +
+      `✅ *Equipo Recomendado:* Split ${quoteData.thermal.recommendedUnit.commercialFrigoriasLabel} (${quoteData.thermal.recommendedUnit.commercialWattsLabel})\n\n` +
+      `🔧 *Mano de Obra de Instalación (CACAAV):*\n` +
+      `• Mínimo: $${quoteData.labor.min.toLocaleString('es-AR')}\n` +
+      `• Recomendado: $${quoteData.labor.recommended.toLocaleString('es-AR')}\n` +
+      `• Máximo: $${quoteData.labor.max.toLocaleString('es-AR')}\n` +
+      `📏 *Cañería contemplada:* ${quoteData.meta.acPipeMeters} metros (${quoteData.materials.pipeDiameters})\n\n` +
+      `🛒 *Insumos y Kit de Instalación:* ~$${quoteData.materials.estimatedCost.toLocaleString('es-AR')} ARS\n` +
+      `• Kit de Cobre 3m (${quoteData.materials.pipeDiameters}) + Ménsulas ${quoteData.materials.bracketSize}\n` +
+      `• Protector de Tensión 20A + Térmica ${quoteData.materials.breakerAmps}\n\n` +
+      `👉 Calculado gratis en: https://kalkular.com/calculadora-frigorias-aire-acondicionado`;
+
+    return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+  }
 
   if (isRejas) {
     const text = `🛡️ *Presupuesto de Pintura para Rejas y Herrería*\n` +
@@ -250,12 +357,32 @@ export function buildWhatsAppShareUrl(quoteData) {
  */
 export function buildWhatsAppMaterialsShareUrl(quoteData) {
   const isRejas = quoteData.meta?.jobCategory === 'rejas';
+  const isAc = quoteData.meta?.jobCategory === 'ac';
   const items = quoteData.materials?.itemsList || [];
   
   let materialsListText = '';
   items.forEach((item, idx) => {
-    materialsListText += `${idx + 1}. *${item.name}*\n   📦 Cantidad: ${item.quantityLabel}\n   🛒 Link: ${item.affiliateUrl}\n\n`;
+    materialsListText += `${idx + 1}. *${item.name}*\n   📦 Especificación: ${item.quantityLabel}\n   🛒 Link: ${item.affiliateUrl}\n\n`;
   });
+
+  if (isAc) {
+    const text = `❄️ *KalkulAR | Balance Térmico y Lista de Climatización*\n` +
+      `📅 Fecha: ${quoteData.meta?.dateCalculated || '2026'}\n\n` +
+      `📍 *Ambiente:* ${quoteData.meta?.roomLabel || 'Ambiente'}\n` +
+      `📐 *Dimensiones:* ${quoteData.surfaces?.totalM2 || 0} m² (${quoteData.surfaces?.volumeM3 || 0} m³)\n` +
+      `🌡️ *Frigorías Calculadas:* ${quoteData.thermal?.exactFrigorias?.toLocaleString('es-AR')} fg (${quoteData.thermal?.exactWatts?.toLocaleString('es-AR')} W)\n` +
+      `✅ *Equipo Recomendado:* Split ${quoteData.thermal?.recommendedUnit?.commercialFrigoriasLabel} (${quoteData.thermal?.recommendedUnit?.commercialWattsLabel})\n\n` +
+      `🔧 *Mano de Obra de Instalación (CACAAV):*\n` +
+      `• Promedio recomendado: $${quoteData.labor?.recommended?.toLocaleString('es-AR')} ARS (Rango: $${quoteData.labor?.min?.toLocaleString('es-AR')} a $${quoteData.labor?.max?.toLocaleString('es-AR')} ARS)\n` +
+      `📏 *Cañería:* ${quoteData.meta?.acPipeMeters || 3} metros (${quoteData.materials?.pipeDiameters})\n\n` +
+      `🛒 *EQUIPO E INSUMOS EN MERCADO LIBRE:*\n` +
+      `Kit de Instalación estimado: ~$${quoteData.materials?.estimatedCost?.toLocaleString('es-AR')} ARS\n\n` +
+      materialsListText +
+      `💡 *Tip Técnico:* Exigí vacío de cañería con bomba (15-20 min) y al menos 3 metros de caño de cobre para conservar la garantía oficial.\n\n` +
+      `👉 Calculá tus frigorías gratis en: https://kalkular.com/calculadora-frigorias-aire-acondicionado`;
+
+    return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+  }
 
   if (isRejas) {
     const text = `🛡️ *KalkulAR | Presupuesto y Lista de Compras de Herrería*\n` +

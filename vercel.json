@@ -5,7 +5,7 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/((?!robots\\.txt|sitemap\\.xml|favicon\\.svg|icons\\.svg|og-image\\.png|assets/|presupuesto/|precios/).*)",
+      "source": "/((?!robots\\.txt|sitemap\\.xml|favicon\\.svg|favicon-96x96\\.png|favicon-48x48\\.png|apple-touch-icon\\.png|site\\.webmanifest|icons\\.svg|og-image\\.png|assets/|presupuesto/|precios/|guia/|calculadora-frigorias-aire-acondicionado).*)",
       "destination": "/index.html"
     }
   ],

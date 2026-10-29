@@ -1,12 +1,15 @@
 import { AFFILIATES_CONFIG } from '../config/affiliates.config.js';
-import { PRICING_CONFIG, REJAS_PRICING_CONFIG } from '../config/pricing.config.js';
+import { PRICING_CONFIG, REJAS_PRICING_CONFIG, AC_PRICING_CONFIG } from '../config/pricing.config.js';
 
 /**
- * Motor de cálculo de presupuestos de pintura y materiales
+ * Motor de cálculo de presupuestos de pintura, herrería y climatización (aires acondicionados)
  */
 export function calculateQuote(inputs) {
   if (inputs && inputs.jobCategory === 'rejas') {
     return calculateRejasQuote(inputs);
+  }
+  if (inputs && inputs.jobCategory === 'ac') {
+    return calculateAcQuote(inputs);
   }
 
   const {
@@ -689,4 +692,272 @@ function calculateRejasQuote(inputs) {
     }
   };
 }
+
+/**
+ * Calcula las frigorías exactas, watts térmicos y el volumen según Normativa Argentina (CACAAV / IRAM 11603)
+ */
+export function calculateThermalLoad({
+  length = 4.0,
+  width = 3.5,
+  height = 2.5,
+  useManualM2 = false,
+  manualM2 = 14,
+  roofType = 'slab_covered', // 'slab_covered' | 'slab_exposed' | 'sheet_wood_roof'
+  sunExposure = 'low_south', // 'low_south' | 'direct_north_west'
+  climateZone = 'standard',  // 'standard' (0) | 'hot_north' (+0.20)
+  extraPeopleCount = 0,      // Personas adicionales por encima de 2 ocupantes base
+  hasExtraPeople = false,    // Tarjeta rápida +3 personas (+450 fg)
+  hasIntegratedKitchen = false, // +350 fg
+  hasHeavyElectronics = false   // +250 fg
+} = {}) {
+  const areaM2 = useManualM2
+    ? Math.max(4, parseFloat(manualM2) || 14)
+    : Math.round((Math.max(1.5, parseFloat(length) || 4) * Math.max(1.5, parseFloat(width) || 3.5)) * 10) / 10;
+
+  const roomHeight = Math.max(2.0, parseFloat(height) || 2.5);
+  const volumeM3 = Math.round(areaM2 * roomHeight * 10) / 10;
+
+  const { thermalConstants } = AC_PRICING_CONFIG;
+
+  // 1. Base volumétrica estándar Argentina (50 fg/m3)
+  const baseFrigorias = volumeM3 * thermalConstants.baseFrigoriasPerM3;
+
+  // 2. Multiplicadores de envolvente térmica
+  const roofPct = thermalConstants.roofMultipliers[roofType]?.percent || 0;
+  const sunPct = thermalConstants.sunMultipliers[sunExposure]?.percent || 0;
+  const climatePct = climateZone === 'hot_north' ? 0.20 : 0.00;
+
+  const totalMultiplier = 1 + roofPct + sunPct + climatePct;
+
+  // 3. Cargas internas adicionales fijas (en Frigorías)
+  const peopleLoadFg = hasExtraPeople
+    ? thermalConstants.internalLoads.extraPeople.addedFrigorias
+    : Math.max(0, parseInt(extraPeopleCount, 10) || 0) * thermalConstants.internalLoads.extraPeople.perPersonFrigorias;
+  const kitchenLoadFg = hasIntegratedKitchen ? thermalConstants.internalLoads.integratedKitchen.addedFrigorias : 0;
+  const electronicsLoadFg = hasHeavyElectronics ? thermalConstants.internalLoads.heavyElectronics.addedFrigorias : 0;
+
+  const internalLoadsTotalFg = peopleLoadFg + kitchenLoadFg + electronicsLoadFg;
+  const envelopeFrigorias = Math.round(baseFrigorias * totalMultiplier);
+  const exactFrigorias = Math.round((baseFrigorias * totalMultiplier) + internalLoadsTotalFg);
+  const exactWatts = Math.round(exactFrigorias * thermalConstants.wattsPerFrigoria);
+
+  return {
+    areaM2,
+    volumeM3,
+    roomHeight,
+    baseFrigorias: Math.round(baseFrigorias),
+    envelopeFrigorias,
+    internalLoadsTotalFg,
+    roofPct,
+    sunPct,
+    exactFrigorias,
+    exactWatts
+  };
+}
+
+/**
+ * Motor de cálculo especializado para Climatización (Aires Acondicionados Split e Instalación CACAAV)
+ */
+export function calculateAcQuote(inputs = {}) {
+  const {
+    acRoomType = 'ac_bedroom_medium',
+    useManualM2 = false,
+    manualM2 = 14,
+    length = 4.0,
+    width = 3.5,
+    height = 2.5,
+    acRoofType = 'slab_covered',
+    acSunExposure = 'low_south',
+    acInternalLoads = [], // ['extraPeople', 'integratedKitchen', 'heavyElectronics']
+    acPipeMeters = 3,
+    acInstallConditions = [], // ['heightWork', 'concreteWallPass', 'ductingOrPreinstall', 'removeOldUnit', 'dedicatedElectricLine']
+    materialsBuyer = 'client'
+  } = inputs;
+
+  const internalLoadsList = Array.isArray(acInternalLoads) ? acInternalLoads : [];
+  const installCondsList = Array.isArray(acInstallConditions) ? acInstallConditions : [];
+
+  // 1. Cálculo de Carga Térmica (Frigorías y Watts)
+  const thermal = calculateThermalLoad({
+    length,
+    width,
+    height,
+    useManualM2,
+    manualM2,
+    roofType: acRoofType,
+    sunExposure: acSunExposure,
+    hasExtraPeople: internalLoadsList.includes('extraPeople'),
+    hasIntegratedKitchen: internalLoadsList.includes('integratedKitchen'),
+    hasHeavyElectronics: internalLoadsList.includes('heavyElectronics')
+  });
+
+  // 2. Mapeo al Escalón Comercial Argentino (2250, 3000, 4500, 6000 fg)
+  const { commercialCapacities, installationSurcharges, thermalConstants, materialEstimatedPrices, presetRooms } = AC_PRICING_CONFIG;
+
+  const recommendedUnit = commercialCapacities.find(
+    cap => thermal.exactFrigorias <= cap.maxCalculatedFrigorias
+  ) || commercialCapacities[commercialCapacities.length - 1];
+
+  const isMultiSplitRecommended = thermal.exactFrigorias > 6350;
+
+  // 3. Cálculo de Mano de Obra de Instalación (CACAAV)
+  const pipeMeters = Math.max(3, parseInt(acPipeMeters, 10) || 3);
+  const extraPipeMeters = Math.max(0, pipeMeters - thermalConstants.standardIncludedPipeMeters);
+  const extraPipeCost = extraPipeMeters * recommendedUnit.extraPipeMeterRate;
+
+  let installSurchargesTotal = 0;
+  const activeConditionsDetails = [];
+
+  installCondsList.forEach(condId => {
+    const cfg = installationSurcharges[condId];
+    if (cfg) {
+      installSurchargesTotal += cfg.fixedPrice;
+      activeConditionsDetails.push(cfg);
+    }
+  });
+
+  const baseLaborMin = recommendedUnit.laborRates.min;
+  const baseLaborRec = recommendedUnit.laborRates.recommended;
+  const baseLaborMax = recommendedUnit.laborRates.max;
+
+  const minLabor = baseLaborMin + extraPipeCost + installSurchargesTotal;
+  const recommendedLabor = baseLaborRec + extraPipeCost + installSurchargesTotal;
+  const maxLabor = baseLaborMax + extraPipeCost + installSurchargesTotal;
+
+  // Tiempo estimado de instalación en obra
+  let estimatedHoursLabel = '2.5 a 3.5 horas';
+  let workforceAdvice = '1 Técnico Matriculado CACAAV';
+  if (recommendedUnit.id === 'split_4500') {
+    estimatedHoursLabel = '3 a 4 horas';
+    workforceAdvice = '1 Técnico Matriculado CACAAV';
+  } else if (recommendedUnit.id === 'split_6000') {
+    estimatedHoursLabel = '4 a 5 horas';
+    workforceAdvice = 'Técnico Matriculado + Ayudante';
+  }
+
+  // 4. Armado del Catálogo de Mercado Libre (4 Productos Clave)
+  const splitProd = AFFILIATES_CONFIG.products[recommendedUnit.splitProductKey];
+  const kitProd = AFFILIATES_CONFIG.products[recommendedUnit.kitProductKey];
+  const protectorProd = AFFILIATES_CONFIG.products.protectorTension20A;
+  const electricKitProd = AFFILIATES_CONFIG.products.kitElectricoToma20A;
+
+  const recommendedMaterialsList = [
+    {
+      ...splitProd,
+      quantityLabel: `1 Equipo Split ${recommendedUnit.commercialFrigoriasLabel} (${recommendedUnit.commercialWattsLabel})`,
+      calculatedQty: 1
+    },
+    {
+      ...kitProd,
+      quantityLabel: `1 Kit Completo 3m (Caños ${recommendedUnit.pipeDiameters} + Ménsulas ${recommendedUnit.bracketSize})`,
+      calculatedQty: 1
+    },
+    {
+      ...protectorProd,
+      quantityLabel: '1 Protector Digital 20A Alta/Baja Tensión (Enchufable)',
+      calculatedQty: 1
+    },
+    {
+      ...electricKitProd,
+      quantityLabel: `1 Kit Térmica + Toma 20A (${recommendedUnit.BreakerAmps})`,
+      calculatedQty: 1
+    }
+  ];
+
+  // Costos estimados de materiales de instalación (Kit 3m + Protector 20A + Kit eléctrico si aplica)
+  const kitCost = recommendedUnit.estimatedKitCost || materialEstimatedPrices[recommendedUnit.kitProductKey] || 94000;
+  const protectorCost = materialEstimatedPrices.protectorTension20A || 35000;
+  const electricKitCost = installCondsList.includes('dedicatedElectricLine') ? (materialEstimatedPrices.kitElectricoToma20A || 21000) : 0;
+  const materialsInstallEstimate = kitCost + protectorCost + electricKitCost;
+
+  const presetObj = presetRooms.find(r => r.id === acRoomType);
+  const roomLabel = presetObj ? presetObj.name : 'Ambiente Personalizado';
+
+  // Detalles térmicos activos para mostrar en resumen
+  const activeThermalDetails = [];
+  if (thermalConstants.roofMultipliers[acRoofType]) {
+    activeThermalDetails.push(thermalConstants.roofMultipliers[acRoofType]);
+  }
+  if (thermalConstants.sunMultipliers[acSunExposure]) {
+    activeThermalDetails.push(thermalConstants.sunMultipliers[acSunExposure]);
+  }
+  internalLoadsList.forEach(loadId => {
+    if (thermalConstants.internalLoads[loadId]) {
+      activeThermalDetails.push(thermalConstants.internalLoads[loadId]);
+    }
+  });
+
+  return {
+    jobCategory: 'ac',
+    thermal: {
+      ...thermal,
+      recommendedUnit,
+      isMultiSplitRecommended,
+      activeThermalDetails
+    },
+    surfaces: {
+      wallM2: thermal.areaM2,
+      ceilingM2: 0,
+      totalM2: thermal.areaM2,
+      volumeM3: thermal.volumeM3,
+      roomHeight: thermal.roomHeight,
+      openingsDeductionM2: 0,
+      isAc: true
+    },
+    labor: {
+      min: minLabor,
+      recommended: recommendedLabor,
+      max: maxLabor,
+      baseWallLabor: baseLaborRec,
+      baseCeilingLabor: 0,
+      extraPipeMeters,
+      extraPipeCost,
+      pipeMeters,
+      conditionSurchargesTotal: installSurchargesTotal,
+      estimatedDays: 1,
+      estimatedHoursLabel,
+      workforceAdvice
+    },
+    materials: {
+      estimatedCost: materialsInstallEstimate,
+      estimatedKitCost: kitCost,
+      estimatedEquipmentCost: recommendedUnit.estimatedEquipmentCost,
+      pipeDiameters: recommendedUnit.pipeDiameters,
+      bracketSize: recommendedUnit.bracketSize,
+      breakerAmps: recommendedUnit.BreakerAmps,
+      itemsList: recommendedMaterialsList,
+      wallPaintContainers: {
+        description: `Kit 3m (${recommendedUnit.pipeDiameters})`,
+        estimatedCost: kitCost
+      },
+      ceilingPaintContainers: {
+        description: `Ménsulas ${recommendedUnit.bracketSize}`,
+        estimatedCost: 0
+      }
+    },
+    combinedTotal: {
+      min: minLabor + (materialsBuyer === 'client' ? 0 : kitCost),
+      recommended: recommendedLabor + materialsInstallEstimate,
+      max: maxLabor + Math.round(materialsInstallEstimate * 1.15),
+      withEquipmentRecommended: recommendedLabor + materialsInstallEstimate + recommendedUnit.estimatedEquipmentCost
+    },
+    meta: {
+      jobCategory: 'ac',
+      materialsBuyer,
+      activeConditionsDetails,
+      acRoofType,
+      acSunExposure,
+      acInternalLoads: internalLoadsList,
+      acPipeMeters: pipeMeters,
+      acInstallConditions: installCondsList,
+      dateCalculated: new Date().toLocaleDateString('es-AR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      }),
+      roomLabel
+    }
+  };
+}
+
 

@@ -1,17 +1,17 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { calculateQuote } from '../../utils/calculateQuote.js';
 import { StepRooms } from './StepRooms.jsx';
 import { StepConditions } from './StepConditions.jsx';
 import { StepResults } from './StepResults.jsx';
 import { Check } from 'lucide-react';
 
-export function CalculatorWizard({ initialPreset }) {
+export function CalculatorWizard({ initialPreset, activeCategory, onCategoryChange, onUserInteract }) {
   const wizardRef = useRef(null);
 
   const [currentStep, setCurrentStep] = useState(1);
 
   const [inputs, setInputs] = useState(() => ({
-    jobCategory: 'walls', // 'walls' | 'rejas'
+    jobCategory: activeCategory || 'walls', // 'walls' | 'rejas' | 'ac'
     // Campos para paredes
     roomType: 'room_medium',
     useManualM2: false,
@@ -33,13 +33,34 @@ export function CalculatorWizard({ initialPreset }) {
     rejaRust: 'light', // 'light' | 'medium' | 'heavy'
     rejaDesign: 'straight', // 'straight' | 'twistedOrMesh' | 'artisticColonial'
     rejaEnvironments: [], // ['heightOrBalcony', 'tightGlassAccess']
+    // Campos para climatización (Aires Acondicionados y Frigorías)
+    acRoomType: 'ac_bedroom_medium',
+    acRoofType: 'slab_covered', // 'slab_covered' | 'slab_exposed' | 'sheet_wood_roof'
+    acSunExposure: 'low_south', // 'low_south' | 'direct_north_west'
+    acInternalLoads: [], // ['extraPeople', 'integratedKitchen', 'heavyElectronics']
+    acPipeMeters: 3, // 3 a 15 metros
+    acInstallConditions: [], // ['heightWork', 'concreteWallPass', 'ductingOrPreinstall', 'removeOldUnit', 'dedicatedElectricLine']
     // Común
     materialsBuyer: 'client', // por defecto el cliente compra en Mercado Libre
     ...(initialPreset || {})
   }));
 
+  // Sincronizar cuando el usuario cambia la categoría desde el selector del Hero
+  useEffect(() => {
+    if (activeCategory && activeCategory !== inputs.jobCategory) {
+      setInputs(prev => ({ ...prev, jobCategory: activeCategory }));
+      setCurrentStep(1);
+    }
+  }, [activeCategory, inputs.jobCategory]);
+
   const handleUpdateInputs = (partial) => {
+    if (onUserInteract) {
+      onUserInteract();
+    }
     setInputs(prev => ({ ...prev, ...partial }));
+    if (partial.jobCategory && onCategoryChange) {
+      onCategoryChange(partial.jobCategory);
+    }
   };
 
   // Cálculo memorizado
@@ -54,27 +75,31 @@ export function CalculatorWizard({ initialPreset }) {
   };
 
   const goToStep = (stepNumber) => {
+    if (onUserInteract) {
+      onUserInteract();
+    }
     setCurrentStep(stepNumber);
     scrollToWizard();
   };
 
   const isRejas = inputs.jobCategory === 'rejas';
+  const isAc = inputs.jobCategory === 'ac';
 
   const stepsHeader = [
     { 
       num: 1, 
-      title: isRejas ? 'Herrería y Medidas' : 'Espacio y m²', 
-      desc: isRejas ? 'Abertura o metros lineales' : 'Ambiente o medidas' 
+      title: isAc ? 'Ambiente y Volumen' : (isRejas ? 'Herrería y Medidas' : 'Espacio y m²'), 
+      desc: isAc ? 'Medidas y m³ a climatizar' : (isRejas ? 'Abertura o metros lineales' : 'Ambiente o medidas') 
     },
     { 
       num: 2, 
-      title: isRejas ? 'Estado de Reja o Portón' : 'Estado de Paredes', 
-      desc: isRejas ? 'Óxido, diseño y altura' : 'Dificultades y extras' 
+      title: isAc ? 'Clima, Sol y Obra' : (isRejas ? 'Estado de Reja o Portón' : 'Estado de Paredes'), 
+      desc: isAc ? 'Techo, cañería y dificultades' : (isRejas ? 'Óxido, diseño y altura' : 'Dificultades y extras') 
     },
     { 
       num: 3, 
-      title: 'Presupuesto Final', 
-      desc: isRejas ? 'Esmalte 3en1 y mano de obra' : 'Mano de obra y materiales' 
+      title: isAc ? 'Frigorías y Presupuesto' : 'Presupuesto Final', 
+      desc: isAc ? 'Equipo Split, CACAAV y Kit ML' : (isRejas ? 'Esmalte 3en1 y mano de obra' : 'Mano de obra y materiales') 
     },
   ];
 
@@ -83,7 +108,12 @@ export function CalculatorWizard({ initialPreset }) {
       <div className="mx-auto max-w-5xl px-4 md:px-8">
         
         {/* Contenedor Principal con Glassmorphism */}
-        <div className="relative rounded-3xl md:rounded-[2.5rem] border border-slate-200/90 bg-white/95 shadow-xl dark:border-white/10 dark:bg-[#0d1322]/80 backdrop-blur-2xl p-5 sm:p-8 md:p-10 dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] transition-all">
+        <div
+          onPointerDown={() => {
+            if (onUserInteract) onUserInteract();
+          }}
+          className="relative rounded-3xl md:rounded-[2.5rem] border border-slate-200/90 bg-white/95 shadow-xl dark:border-white/10 dark:bg-[#0d1322]/80 backdrop-blur-2xl p-5 sm:p-8 md:p-10 dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] transition-all"
+        >
           
           {/* Stepper Tabs Bar */}
           <div className="mb-8 md:mb-12">
@@ -103,7 +133,9 @@ export function CalculatorWizard({ initialPreset }) {
                     }}
                     className={`flex flex-col items-center sm:items-start p-2.5 sm:p-4 rounded-2xl border transition-all text-left ${
                       isCurrent
-                        ? 'border-[#ff6a00] bg-[#ff6a00]/10 shadow-[0_0_20px_-5px_rgba(255,106,0,0.3)]'
+                        ? isAc
+                          ? 'border-sky-500 bg-sky-500/10 shadow-[0_0_20px_-5px_rgba(14,165,233,0.3)]'
+                          : 'border-[#ff6a00] bg-[#ff6a00]/10 shadow-[0_0_20px_-5px_rgba(255,106,0,0.3)]'
                         : isPassed
                         ? 'border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20'
                         : 'border-slate-200 bg-slate-50 opacity-60 cursor-not-allowed dark:border-white/5 dark:bg-white/[0.02]'
@@ -112,7 +144,9 @@ export function CalculatorWizard({ initialPreset }) {
                     <div className="flex items-center gap-2 mb-1">
                       <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-black ${
                         isCurrent
-                          ? 'bg-[#ff6a00] text-white'
+                          ? isAc
+                            ? 'bg-sky-500 text-white'
+                            : 'bg-[#ff6a00] text-white'
                           : isPassed
                           ? 'bg-emerald-500 text-white'
                           : 'bg-slate-200 text-slate-600 dark:bg-white/10 dark:text-slate-400'

@@ -677,6 +677,596 @@ export const PSEO_PAGES = [
 ];
 
 /**
+ * =========================================================================
+ * ❄️ PÁGINAS DE SEO PROGRAMÁTICO — CLIMATIZACIÓN Y AIRES ACONDICIONADOS (2026/2027)
+ * =========================================================================
+ */
+export const AC_PSEO_PAGES = [
+  // 1. Calculadora de Frigorías (Landing Pilar de Herramienta)
+  {
+    slug: 'calculadora-frigorias-aire-acondicionado',
+    path: '/calculadora-frigorias-aire-acondicionado',
+    category: 'herramienta',
+    badge: 'Calculadora Oficial CACAAV 2026',
+    title: 'Calculadora de Frigorías por m² y m³ en Argentina (2026) | KalkulAR',
+    metaDescription: 'Calculá gratis cuántas frigorías y watts necesita tu habitación o living en Argentina. Fórmula exacta por m³, techo, orientación solar y costo de instalación CACAAV.',
+    h1: 'Calculadora de Frigorías y Costo de Instalación de Aire Acondicionado (2026)',
+    subtitle: 'Dimensionamiento térmico exacto por volumen (m³), exposición solar, tipo de techo y presupuesto de mano de obra de instalación en Argentina.',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_bedroom_medium',
+      length: 4.0,
+      width: 3.5,
+      height: 2.5,
+      acRoofType: 'slab_covered',
+      acSunExposure: 'low_south',
+      acInternalLoads: [],
+      acPipeMeters: 3,
+      acInstallConditions: [],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'Para calcular las frigorías exactas de un aire acondicionado en Argentina se multiplica el volumen del ambiente (Largo × Ancho × Alto en m³) por 50 frigorías/m³ (equivalente a 125 frigorías por m² en techos de 2.50m). Si el ambiente tiene losa expuesta al sol, techo de chapa o ventanal al Norte/Oeste, se adiciona entre un 15% y un 40% extra.',
+      metrics: {
+        totalM2: '50 fg por m³ (Base)',
+        wallM2: '125 a 165 fg por m²',
+        ceilingM2: '1 fg = 1.163 Watts',
+        paintLiters: '2250 / 3000 / 4500 / 6000 fg',
+        ceilingLiters: 'Kit 3m (1/4" y 3/8" o 1/2")',
+        laborFairPrice: '$155.000 ARS (Base 3000fg)',
+        laborRange: '$125.000 a $240.000 ARS',
+        materialsCost: '~$94.000 ARS (Kit 3m)',
+        estimatedDays: '3 a 4 horas de instalación'
+      },
+      editorialParagraphs: [
+        'El error más frecuente al comprar un aire acondicionado en Argentina es guiarse únicamente por los metros cuadrados de piso sin evaluar la altura del techo ni la carga térmica solar. Un dormitorio en planta baja con otro departamento arriba requiere un 30% menos de potencia frigorífica que el mismo cuarto ubicado en un último piso con terraza expuesta al sol de enero o techo de chapa y machimbre.',
+        'La normativa técnica empleada por los matriculados de CACAAV parte de una base volumétrica de 50 frigorías por metro cúbico (m³) para zonas templadas (AMBA, Córdoba, Rosario, Mendoza) y aplica factores de corrección por orientación Norte/Oeste (+15%), cubierta expuesta (+15% a +25%), cantidad de ocupantes (+150 fg por persona extra) y artefactos calóricos como heladeras o computadoras.',
+        'Una vez obtenidas las frigorías reales, nuestra calculadora mapea automáticamente el resultado al escalón comercial exacto que se vende en Argentina (2.250 fg / 2.600W, 3.000 fg / 3.500W, 4.500 fg / 5.200W o 6.000 fg / 6.500W) y desglosa cuánto cuesta la mano de obra del instalador junto con el kit de caños de cobre en Mercado Libre.'
+      ],
+      faqs: [
+        {
+          q: '¿Cómo se calculan las frigorías de un aire acondicionado por metro cuadrado y cúbico?',
+          a: 'Multiplicá Largo x Ancho x Alto de la habitación para obtener los metros cúbicos (m³) y multiplicalos por 50. Por ejemplo, un cuarto de 4m x 3.5m x 2.5m tiene 35 m³ x 50 = 1.750 frigorías base. Si recibe sol directo de tarde, sumá un 15% (2.012 fg), correspondiendo un equipo comercial de 2.250 o 3.000 frigorías.'
+        },
+        {
+          q: '¿Qué pasa si compro un aire acondicionado con menos frigorías de las necesarias?',
+          a: 'Un equipo subdimensionado nunca llega a cortar por termostato en los días de más de 35°C. El motocompresor funciona al 100% de manera continua, disparando el consumo eléctrico hasta un 40% más y reduciendo drásticamente su vida útil.'
+        },
+        {
+          q: '¿Es mejor que sobren frigorías o comprar el equipo justo?',
+          a: 'Siempre conviene elegir el escalón comercial inmediatamente superior cuando el cálculo queda al límite, especialmente si elegís tecnología Inverter. Un equipo Inverter regula las revoluciones del compresor y consume sólo la energía necesaria sin desperdiciar electricidad.'
+        }
+      ]
+    }
+  },
+
+  // 2. Precio de Instalación de Aire Acondicionado en Argentina (Tarifario CACAAV)
+  {
+    slug: 'instalacion-aire-acondicionado-argentina',
+    path: '/precios/instalacion-aire-acondicionado-argentina',
+    category: 'precios',
+    badge: 'Tarifario Oficial 2026/2027',
+    title: 'Precio Instalación de Aire Acondicionado en Argentina (2026/2027) | Tarifario CACAAV',
+    metaDescription: '¿Cuánto cuesta instalar un aire acondicionado Split en Argentina en 2026/2027? Mano de obra oficial CACAAV desde $155.000 ARS, costo por metro de caño y kit de materiales.',
+    h1: 'Precio de Instalación de Aire Acondicionado Split en Argentina (Temporada 2026/2027)',
+    subtitle: 'Guía actualizada de tarifas de mano de obra de técnicos matriculados por frigorías, metro lineal extra de cañería y adicionales de obra.',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_bedroom_medium',
+      length: 4.0,
+      width: 3.5,
+      height: 2.5,
+      acRoofType: 'slab_covered',
+      acSunExposure: 'direct_north_west',
+      acInternalLoads: [],
+      acPipeMeters: 3,
+      acInstallConditions: [],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'En la temporada 2026/2027 en Argentina, el precio de mano de obra para instalar un aire acondicionado Split de 2.250 a 3.000 frigorías oscila entre $125.000 y $195.000 ARS (promedio justo matriculado CACAAV: $155.000 ARS). Para equipos de 4.500 frigorías promedia $190.000 ARS y para 6.000 frigorías $225.000 ARS, sin incluir el kit de materiales ($94.000 a $115.000 ARS).',
+      metrics: {
+        totalM2: 'Hasta 3m de caño',
+        wallM2: '$155.000 ARS (2250/3000 fg)',
+        ceilingM2: '$190.000 ARS (4500 fg)',
+        paintLiters: '$225.000 ARS (6000 fg)',
+        ceilingLiters: '$35.000 a $44.000 / m extra',
+        laborFairPrice: '$155.000 ARS',
+        laborRange: '$125.000 a $240.000 ARS',
+        materialsCost: '~$94.000 ARS (Kit 3m)',
+        estimatedDays: '3 horas en domicilio'
+      },
+      editorialParagraphs: [
+        'El costo de colocación de un aire acondicionado Split en Argentina se divide en dos componentes: la tarifa de mano de obra profesional del técnico matriculado y el valor de los materiales de interconexión (caños de cobre de alta y baja, aislantes elastoméricos, ménsulas, cable TPR y manguera de desagüe).',
+        'Una instalación reglamentaria avalada por CACAAV y las marcas oficiales (BGH, Surrey, Philco, Samsung, LG) exige obligatoriamente respetar un recorrido mínimo de 3 metros de cañería de cobre y realizar vacío del circuito con bomba de vacío durante al menos 20 a 30 minutos. Omitir la bomba de vacío ("purgado a gas") contamina el aceite del compresor con humedad y anula inmediatamente la garantía de fábrica.',
+        'Para ahorrar entre un 25% y un 35% en el presupuesto total, la modalidad más conveniente es contratar al técnico únicamente por la mano de obra y comprar por tu cuenta el Kit de Instalación Completo de 3 metros con ménsulas en Mercado Libre con envío gratis y cuotas.'
+      ],
+      faqs: [
+        {
+          q: '¿Cuánto cuesta la mano de obra para instalar un aire acondicionado de 3000 frigorías en 2026?',
+          a: 'La mano de obra pura de un instalador matriculado para un equipo de hasta 3.000 frigorías tiene un valor promedio de $155.000 ARS (con un rango de mercado de $125.000 a $195.000 ARS según zona y garantía).'
+        },
+        {
+          q: '¿Qué incluye el precio básico de instalación de un aire acondicionado Split?',
+          a: 'Incluye el amurado de la unidad interior y de las ménsulas exteriores en pared accesible (balcón, patio o terraza), un pase de pared estándar de 15cm, la conexión de hasta 3 metros de cañería, presurización, vacío con bomba y prueba de funcionamiento.'
+        },
+        {
+          q: '¿Cuánto se cobra el metro adicional de cañería si supera los 3 metros?',
+          a: 'Cada metro lineal extra por encima de los 3 metros estándar cuesta entre $35.000 ARS/m (para equipos de 2250 y 3000 frigorías con caño de 1/4" y 3/8") y $44.000 ARS/m (para equipos de 4500 y 6000 frigorías con caño de 1/4" y 1/2"), incluyendo caño de cobre, aislante, cable y mano de obra.'
+        }
+      ]
+    }
+  },
+
+  // 3. Habitación 3x3
+  {
+    slug: 'aire-acondicionado-habitacion-3x3',
+    path: '/presupuesto/aire-acondicionado-habitacion-3x3',
+    category: 'presupuesto',
+    badge: 'Preset Dormitorio Chico 3x3m',
+    title: '¿Cuántas Frigorías Necesita una Habitación de 3x3? Precio e Instalación (2026) | KalkulAR',
+    metaDescription: 'Descubrí cuántas frigorías lleva un dormitorio de 3x3 metros (9 m²). Cálculo térmico exacto (2250 fg / 2600W), precio de mano de obra de instalación y kit en Mercado Libre.',
+    h1: 'Aire Acondicionado para Habitación de 3x3: Frigorías y Presupuesto de Instalación (2026)',
+    subtitle: 'Cálculo térmico para 9 m² (22.5 m³), equipo Split recomendado y costos de colocación con materiales.',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_bedroom_small',
+      length: 3.0,
+      width: 3.0,
+      height: 2.5,
+      acRoofType: 'slab_covered',
+      acSunExposure: 'low_south',
+      acInternalLoads: [],
+      acPipeMeters: 3,
+      acInstallConditions: [],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'Una habitación de 3x3 metros (9 m² de planta y 22.5 m³ de volumen) necesita entre 1.125 y 1.650 frigorías reales según la exposición solar. El equipo comercial exacto a comprar en Argentina es un Aire Acondicionado Split de 2.250 a 2.300 frigorías (2.600W - 2.700W). El costo de mano de obra de instalación ronda los $155.000 ARS y el kit de materiales unos $94.000 ARS.',
+      metrics: {
+        totalM2: '9 m² (22.5 m³)',
+        wallM2: '1.125 a 1.650 fg reales',
+        ceilingM2: 'Split 2.250 Frigorías (2600W)',
+        paintLiters: 'Caños de cobre 1/4" y 3/8"',
+        ceilingLiters: 'Ménsulas de 42 cm',
+        laborFairPrice: '$155.000 ARS',
+        laborRange: '$125.000 a $195.000 ARS',
+        materialsCost: '~$94.000 ARS (Kit 3m)',
+        estimatedDays: '3 horas de trabajo'
+      },
+      editorialParagraphs: [
+        'Un dormitorio individual o escritorio de 3x3 metros con altura estándar de 2.50 metros encierra un volumen de aire de 22.5 m³. Aplicando la regla termomecánica de 50 frigorías por m³, la demanda base es de apenas 1.125 frigorías (o unas 1.575 frigorías si el cuarto tiene techo de chapa o sol directo del oeste por la tarde).',
+        'Dado que el escalón comercial más pequeño fabricado en Argentina para equipos Split de pared es el de 2.250 a 2.300 frigorías (aproximadamente 2.600W a 2.750W), este equipo cubre la habitación con una holgura térmica ideal, logrando enfriar o calefaccionar el cuarto en menos de 10 minutos.',
+        'Para la instalación se utiliza el kit estándar de 3 metros con cañería de cobre de 1/4" y 3/8", ménsulas epoxi de 42 cm y protector de tensión enchufable de 20A.'
+      ],
+      faqs: [
+        {
+          q: '¿Alcanza un aire de 2250 frigorías para una habitación de 3x3?',
+          a: 'Sí, sobra capacidad. Una pieza de 3x3m demanda alrededor de 1.125 a 1.650 frigorías reales, por lo que un Split de 2.250 frigorías (2.600W) trabajará muy descansado y con bajo nivel de ruido.'
+        },
+        {
+          q: '¿Cuándo conviene poner un aire de 3000 frigorías en un cuarto de 3x3?',
+          a: 'Prácticamente en ningún caso residencial normal; el equipo de 2.250 frigorías ya ofrece un 40% de margen de reserva incluso con techo expuesto al sol y ventana al oeste.'
+        },
+        {
+          q: '¿Qué caños lleva un aire de 2250 frigorías para un dormitorio de 3x3?',
+          a: 'Lleva caño de cobre de 1/4 pulgada para la línea de líquido y de 3/8 pulgada para la línea de gas, junto con cable tipo taller de 5x1.5 mm².'
+        }
+      ]
+    }
+  },
+
+  // 4. Habitación 4x4
+  {
+    slug: 'aire-acondicionado-habitacion-4x4',
+    path: '/presupuesto/aire-acondicionado-habitacion-4x4',
+    category: 'presupuesto',
+    badge: 'Preset Dormitorio 4x4m (16 m²)',
+    title: '¿Cuántas Frigorías Necesita una Habitación de 4x4 (16 m²)? Presupuesto 2026 | KalkulAR',
+    metaDescription: 'Calculá qué aire acondicionado necesita un dormitorio de 4x4 metros (16 m²). Frigorías recomendadas (2250 vs 3000 fg), mano de obra de instalación y equipos en oferta.',
+    h1: 'Aire Acondicionado para Habitación de 4x4: Frigorías y Costo de Instalación (2026)',
+    subtitle: 'Dimensionamiento térmico para dormitorios matrimoniales de 16 m² (40 m³), comparativa 2250 vs 3000 fg y costos de obra.',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_bedroom_medium',
+      length: 4.0,
+      width: 4.0,
+      height: 2.5,
+      acRoofType: 'slab_exposed',
+      acSunExposure: 'direct_north_west',
+      acInternalLoads: [],
+      acPipeMeters: 3,
+      acInstallConditions: [],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'Una habitación de 4x4 metros (16 m² y 40 m³ de volumen) requiere 2.000 frigorías en condiciones de sombra y sube a 2.600 frigorías si tiene losa expuesta al sol o ventana al Norte/Oeste. Por eso, la recomendación segura en Argentina es instalar un Split de 3.000 frigorías (3.400W - 3.550W). Su instalación cuesta unos $155.000 ARS de mano de obra más $94.000 ARS del kit.',
+      metrics: {
+        totalM2: '16 m² (40 m³)',
+        wallM2: '2.000 a 2.600 fg reales',
+        ceilingM2: 'Split 3.000 Frigorías (3500W)',
+        paintLiters: 'Caños de cobre 1/4" y 3/8"',
+        ceilingLiters: 'Ménsulas de 42 cm',
+        laborFairPrice: '$155.000 ARS',
+        laborRange: '$125.000 a $195.000 ARS',
+        materialsCost: '~$94.000 ARS (Kit 3m)',
+        estimatedDays: '3 horas de trabajo'
+      },
+      editorialParagraphs: [
+        'El dormitorio de 4x4 metros (16 m²) es el caso donde más dudas surgen entre comprar un equipo de 2.250 frigorías o saltar al de 3.000 frigorías. Si el cuarto está en un piso intermedio sin sol directo de tarde, su carga térmica es de 2.000 frigorías y un equipo de 2.250 fg alcanza.',
+        'Sin embargo, apenas la habitación tiene techo de losa expuesto al sol (+15%), techo de machimbre/chapa (+25%) o un ventanal orientado al Norte u Oeste (+15%), la carga térmica real trepa a 2.600 frigorías. En ese escenario, un aire de 2.250 fg queda chico en las tardes de enero, siendo indispensable elegir un Split de 3.000 frigorías (3.400W - 3.550W).',
+        'La ventaja económica es que el Split de 3.000 frigorías paga exactamente la misma tarifa de mano de obra de instalación ($155.000 ARS promedio) y utiliza el mismo kit de caños de 1/4" y 3/8" que el de 2.250 frigorías.'
+      ],
+      faqs: [
+        {
+          q: '¿Para una habitación de 4x4 conviene 2250 o 3000 frigorías?',
+          a: 'Si la habitación recibe sol por la tarde o está en un último piso o casa con techo expuesto, elegí sin dudar 3.000 frigorías (3.500W). Además, la diferencia de precio del equipo es de apenas un 10% y el costo de instalación es idéntico.'
+        },
+        {
+          q: '¿Cuánto cuesta instalar un Split de 3000 frigorías en un dormitorio 4x4?',
+          a: 'El costo de mano de obra de un técnico matriculado CACAAV promedia los $155.000 ARS, mientras que el kit completo de instalación de 3 metros con ménsulas ronda los $94.000 ARS en Mercado Libre.'
+        },
+        {
+          q: '¿Cuánto consume por hora un aire Inverter de 3000 frigorías en un dormitorio?',
+          a: 'En régimen de mantenimiento nocturno a 24°C, un Split Inverter de 3.000 frigorías consume entre 0.35 y 0.55 kWh por hora, ahorrando hasta un 40% de electricidad frente a un equipo tradicional On/Off.'
+        }
+      ]
+    }
+  },
+
+  // 5. Living Comedor
+  {
+    slug: 'aire-acondicionado-living-comedor',
+    path: '/presupuesto/aire-acondicionado-living-comedor',
+    category: 'presupuesto',
+    badge: 'Preset Living Comedor 5x4m (20 m²)',
+    title: 'Aire Acondicionado para Living Comedor (5x4m): Frigorías y Presupuesto 2026 | KalkulAR',
+    metaDescription: '¿Qué aire acondicionado comprar para un living comedor de 20 a 30 m²? Cálculo de 3000 vs 4500 frigorías, costo de instalación matriculada y kits de 1/4 y 1/2 en Mercado Libre.',
+    h1: 'Presupuesto de Aire Acondicionado para Living Comedor en Argentina (2026)',
+    subtitle: 'Cálculo térmico para salas de estar con ventanales, circulación de personas y presupuesto de instalación para 4.500 frigorías.',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_living_medium',
+      length: 5.0,
+      width: 4.0,
+      height: 2.6,
+      acRoofType: 'slab_covered',
+      acSunExposure: 'direct_north_west',
+      acInternalLoads: ['extraPeople'],
+      acPipeMeters: 3,
+      acInstallConditions: [],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'Un living comedor estándar de 5x4 metros con 2.60m de altura (20 m² de planta y 52 m³) y ventanal requiere entre 3.000 y 3.650 frigorías reales considerando reuniones familiares y TV. El equipo recomendado para climatizar sin esfuerzo es un Split de 4.500 frigorías (5.100W - 5.300W). La mano de obra de instalación promedia $190.000 ARS y el kit de caños de 1/4" y 1/2" ronda los $115.000 ARS.',
+      metrics: {
+        totalM2: '20 m² (52 m³)',
+        wallM2: '3.000 a 3.650 fg reales',
+        ceilingM2: 'Split 4.500 Frigorías (5200W)',
+        paintLiters: 'Caños de cobre 1/4" y 1/2"',
+        ceilingLiters: 'Ménsulas reforzadas 52 cm',
+        laborFairPrice: '$190.000 ARS',
+        laborRange: '$155.000 a $240.000 ARS',
+        materialsCost: '~$115.000 ARS (Kit 1/4 y 1/2)',
+        estimatedDays: '3.5 a 4 horas de trabajo'
+      },
+      editorialParagraphs: [
+        'Los livings comedores presentan tres desafíos térmicos que no existen en un dormitorio: mayor altura de cielorraso (2.60m a 2.80m), grandes paños vidriados de puertas balcón y apertura constante hacia pasillos o cocinas.',
+        'Un ambiente de 5x4 metros (52 m³) parte de 2.600 frigorías base, pero al sumar la incidencia solar del ventanal (+15%) y la presencia de 4 a 5 personas durante almuerzos o cenas (+450 fg), la demanda real asciende a 3.440 frigorías. Instalar un equipo de 3.000 frigorías lo obligaría a trabajar forzado al máximo; por ello, el estándar profesional para livings de 20 a 30 m² es el Split de 4.500 frigorías (5.200W).',
+        'A nivel técnico, los equipos de 4.500 frigorías requieren cañería de cobre de 1/4" y 1/2" y ménsulas reforzadas de 52 cm debido al mayor tamaño y peso del motocompresor exterior.'
+      ],
+      faqs: [
+        {
+          q: '¿Cuántas frigorías necesito para un living comedor de 5x4 metros (20 m²)?',
+          a: 'Si el living es cerrado, sombreado y en piso intermedio, un equipo de 3.000 frigorías llega justo. Pero si tiene puerta balcón, sol de tarde, techo expuesto o se integra con pasillos, necesitás un Split de 4.500 frigorías (5.200W).'
+        },
+        {
+          q: '¿Por qué la instalación de un aire de 4500 frigorías es más cara que uno de 3000?',
+          a: 'Porque lleva caños de cobre de mayor diámetro (1/2 pulgada en lugar de 3/8), ménsulas más largas de 52 cm y una unidad exterior más pesada de manipular. La mano de obra promedia los $190.000 ARS.'
+        },
+        {
+          q: '¿Dónde conviene ubicar la unidad interior en el living comedor?',
+          a: 'Conviene instalarla orientando el flujo de aire a lo largo del salón hacia la mesa o los sillones, evitando colocarla justo encima de televisores o frente a un pasillo abierto por donde se escape el aire frío.'
+        }
+      ]
+    }
+  },
+
+  // 6. Monoambiente / Quincho
+  {
+    slug: 'aire-acondicionado-monoambiente-quincho',
+    path: '/presupuesto/aire-acondicionado-monoambiente-quincho',
+    category: 'presupuesto',
+    badge: 'Preset Quincho / Monoambiente 30 m²',
+    title: 'Aire Acondicionado para Quincho o Monoambiente (30 m²): Frigorías y Costos 2026 | KalkulAR',
+    metaDescription: 'Calculá las frigorías para un monoambiente con cocina integrada o quincho de 30 m² (6x5m). Comparativa 4500 vs 6000 frigorías, costo de instalación y equipos Split.',
+    h1: 'Aire Acondicionado para Monoambiente o Quincho (30 m²): Cálculo y Presupuesto (2026)',
+    subtitle: 'Cálculo térmico con carga de cocina/parrilla integrada, techo expuesto y presupuesto de instalación para alta capacidad.',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_quincho_mono',
+      length: 6.0,
+      width: 5.0,
+      height: 2.6,
+      acRoofType: 'slab_exposed',
+      acSunExposure: 'direct_north_west',
+      acInternalLoads: ['integratedKitchen', 'extraPeople'],
+      acPipeMeters: 3,
+      acInstallConditions: [],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'Un monoambiente amplio o quincho cerrado de 6x5 metros (30 m² y 78 m³) requiere 3.900 frigorías base, llegando a 5.400 - 5.800 frigorías cuando se suma techo expuesto o de chapa, ventanales y calor de cocina o reuniones. El equipo recomendado es un Split de 5.500 a 6.000 frigorías (6.300W - 6.800W) (o 4.500 fg si es piso intermedio sin sol). La instalación cuesta unos $225.000 ARS de mano de obra.',
+      metrics: {
+        totalM2: '30 m² (78 m³)',
+        wallM2: '4.250 a 5.800 fg reales',
+        ceilingM2: 'Split 5.500 / 6.000 fg (6500W)',
+        paintLiters: 'Caños de cobre 1/4" y 1/2" (o 5/8")',
+        ceilingLiters: 'Ménsulas reforzadas 52 cm',
+        laborFairPrice: '$225.000 ARS',
+        laborRange: '$185.000 a $280.000 ARS',
+        materialsCost: '~$115.000 ARS (Kit 3m)',
+        estimatedDays: '4 a 5 horas de trabajo'
+      },
+      editorialParagraphs: [
+        'Climatizar un quincho vidriado o un monoambiente grande de 30 m² exige contemplar las cargas térmicas internas: una heladera funcionando permanentemente, anafes u hornos y grupos de 6 a 10 personas en reuniones aportan hasta 800 frigorías adicionales que un cálculo simple por m² ignora.',
+        'Además, la mayoría de los quinchos en Argentina poseen cubierta de losa sin piso superior (+15%) o techo de chapa y madera (+25%) más amplios ventanales hacia el jardín o patio (+15%). Esto eleva la demanda de un salón de 6x5m desde 3.900 fg base hasta unas 5.500 frigorías reales en las tardes de verano.',
+        'Para esta escala se recomienda un Split de 5.500 a 6.000 frigorías (6.300W a 6.800W), cuya instalación requiere línea eléctrica dedicada con llave térmica de 20A/25A y ménsulas de 52 cm.'
+      ],
+      faqs: [
+        {
+          q: '¿Cuánto influye la cocina integrada o la parrilla en el cálculo de frigorías?',
+          a: 'El motor de la heladera, la cocción y el calor corporal de varios invitados suman entre 500 y 800 frigorías extras. Si estás al límite entre 4.500 y 6.000 frigorías, siempre elegí el equipo de 6.000 frigorías.'
+        },
+        {
+          q: '¿Qué pasa si el quincho tiene techo de chapa o madera a la vista?',
+          a: 'Los techos de chapa o machimbre transmiten mucho más calor por radiación solar que una losa con un piso arriba, sumando un 25% extra al requerimiento de frigorías.'
+        },
+        {
+          q: '¿Qué instalación eléctrica requiere un aire de 4500 o 6000 frigorías?',
+          a: 'Debe conectarse a un circuito independiente desde el tablero con cable de 2.5 mm² a 4 mm², llave térmica bipolar propia de 20A o 25A y protector de alta/baja tensión de 20A.'
+        }
+      ]
+    }
+  },
+
+  // 7. Guía: ¿Cuántas frigorías necesito por m2?
+  {
+    slug: 'cuantas-frigorias-necesito-por-m2',
+    path: '/guia/cuantas-frigorias-necesito-por-m2',
+    category: 'guia',
+    badge: 'Guía Técnica y Tabla 2026',
+    title: '¿Cuántas Frigorías Necesito por m² en Argentina? Tabla y Fórmula Oficial (2026) | KalkulAR',
+    metaDescription: 'Tabla completa de frigorías por m² y m³ para Argentina (10 m², 15 m², 20 m², 30 m² y 40 m²). Aprendé la regla de las 50 frigorías por m³ y calculá tu equipo exacto.',
+    h1: '¿Cuántas Frigorías Necesito por Metro Cuadrado (m²) en Argentina? Guía y Tabla 2026',
+    subtitle: 'Tabla de referencia rápida para 10, 15, 20, 30 y 40 m² y fórmula de balance térmico por volumen (50 fg/m³).',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_bedroom_medium',
+      length: 4.0,
+      width: 3.5,
+      height: 2.5,
+      acRoofType: 'slab_covered',
+      acSunExposure: 'low_south',
+      acInternalLoads: [],
+      acPipeMeters: 3,
+      acInstallConditions: [],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'En Argentina se calculan 50 frigorías por metro cúbico (m³), lo que equivale a 125 frigorías por metro cuadrado (m²) para un techo estándar de 2.50 metros de altura en condiciones normales, o 150 a 165 frigorías por m² en ambientes calurosos con sol de tarde o techo expuesto. Así: hasta 15 m² lleva 2.250 fg; de 15 a 22 m² lleva 3.000 fg; de 23 a 34 m² lleva 4.500 fg; y de 35 a 48 m² lleva 6.000 fg.',
+      metrics: {
+        totalM2: '125 a 165 fg / m²',
+        wallM2: '10 a 15 m² -> 2.250 fg',
+        ceilingM2: '15 a 22 m² -> 3.000 fg',
+        paintLiters: '23 a 34 m² -> 4.500 fg',
+        ceilingLiters: '35 a 48 m² -> 6.000 fg',
+        laborFairPrice: '50 fg / m³ (Base CACAAV)',
+        laborRange: '40 a 65 fg / m³ según clima',
+        materialsCost: 'Ajuste +15% a +25% por sol/techo',
+        estimatedDays: 'Cálculo instantáneo'
+      },
+      editorialParagraphs: [
+        'Aunque popularmente se suele hablar de "100 frigorías por metro cuadrado", esa regla antigua quedó obsoleta para los veranos actuales en Argentina, donde las olas de calor superan los 36°C a 40°C en gran parte del país. Hoy el estándar técnico de CACAAV establece 50 frigorías por metro cúbico (m³), que multiplicadas por 2.50 metros de altura arrojan un piso real de 125 frigorías por m².',
+        'Cuando el ambiente se ubica en el último piso de un edificio (losa expuesta al sol), tiene techo de chapa/machimbre o cuenta con ventanas orientadas al Norte o al Oeste, el requerimiento real sube a 150 - 165 frigorías por m².',
+        'Por eso es fundamental ingresar el Largo, Ancho y Alto de tu ambiente en la calculadora superior y tildar el tipo de techo antes de elegir qué aire acondicionado comprar.'
+      ],
+      faqs: [
+        {
+          q: '¿Cuántas frigorías se calculan por metro cuadrado en Argentina?',
+          a: 'Para un techo normal de 2.50 metros de alto se calculan 125 frigorías por m² en ambientes sombreados o pisos intermedios, y 150 a 165 frigorías por m² en ambientes con sol directo de tarde o losa expuesta.'
+        },
+        {
+          q: '¿Qué aire necesito para 10, 15, 20, 30 y 40 metros cuadrados?',
+          a: 'Para 10 a 14 m²: Split de 2.250 frigorías (2600W). Para 15 a 22 m²: Split de 3.000 frigorías (3500W). Para 23 a 34 m²: Split de 4.500 frigorías (5200W). Para 35 a 48 m²: Split de 6.000 frigorías (6500W).'
+        },
+        {
+          q: '¿Por qué los ingenieros calculan por metro cúbico (m³) y no por metro cuadrado (m²)?',
+          a: 'Porque el aire acondicionado climatiza todo el volumen de aire del cuarto. Un PH antiguo con techos de 3.60 metros de altura tiene un 44% más de volumen de aire que un departamento moderno de 2.50 metros con los mismos m² de piso.'
+        }
+      ]
+    }
+  },
+
+  // 8. Guía: Equivalencia de Frigorías a Watts
+  {
+    slug: 'equivalencia-frigorias-a-watts-aire-acondicionado',
+    path: '/guia/equivalencia-frigorias-a-watts-aire-acondicionado',
+    category: 'guia',
+    badge: 'Conversor Watts ↔ Frigorías',
+    title: 'Tabla de Equivalencia Frigorías a Watts en Aires Acondicionados (Argentina 2026) | KalkulAR',
+    metaDescription: 'Convertí Watts a Frigorías al instante: ¿Cuántas frigorías son 2600W, 3400W, 3500W, 5200W y 6500W? Tabla oficial del mercado argentino y calculadora térmica.',
+    h1: 'Equivalencia de Frigorías a Watts en Aires Acondicionados (Tabla Argentina 2026)',
+    subtitle: 'Cómo convertir la potencia en Watts (W) de las etiquetas de Mercado Libre a Frigorías reales sin confundirte.',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_bedroom_medium',
+      length: 4.0,
+      width: 3.5,
+      height: 2.5,
+      acRoofType: 'slab_covered',
+      acSunExposure: 'low_south',
+      acInternalLoads: [],
+      acPipeMeters: 3,
+      acInstallConditions: [],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'Para convertir Watts térmicos a Frigorías se multiplica por 0.86 (o se divide por 1.163). En el mercado argentino las equivalencias comerciales exactas son: 2.600W a 2.750W = 2.250 a 2.300 Frigorías; 3.400W a 3.550W = 3.000 Frigorías; 5.100W a 5.300W = 4.500 Frigorías; y 6.300W a 6.800W = 5.500 a 6.000 Frigorías.',
+      metrics: {
+        totalM2: '1 Frigoría = 1.163 Watts',
+        wallM2: '2.650 W = 2.250 Frigorías',
+        ceilingM2: '3.500 W = 3.000 Frigorías',
+        paintLiters: '5.200 W = 4.500 Frigorías',
+        ceilingLiters: '6.500 W = 5.600 / 6.000 fg',
+        laborFairPrice: 'Factor: Watts × 0.86',
+        laborRange: 'Consumo eléctrico ≈ Watts / 3.3',
+        materialsCost: 'Norma IRAM 62406',
+        estimatedDays: 'Conversión exacta'
+      },
+      editorialParagraphs: [
+        'Por disposición de la normativa IRAM de etiquetado energético en Argentina, todas las cajas y publicaciones de aires acondicionados (BGH, Surrey, Philco, Samsung, LG) expresan su capacidad de refrigeración en Watts (W), mientras que los usuarios e instaladores siguen utilizando las Frigorías.',
+        'Esto suele generar confusiones al comprar online: muchos compradores ven un equipo publicado como "3500W" y creen que es de 3.500 frigorías, cuando en realidad 3.500 Watts térmicos multiplicados por 0.86 equivalen a 3.010 frigorías.',
+        'También es fundamental no confundir los Watts de capacidad frigorífica con los Watts de potencia eléctrica consumida de la red: un aire de 3.500W frigoríficos (3.000 fg) con eficiencia Clase A consume apenas entre 950W y 1.080W eléctricos.'
+      ],
+      faqs: [
+        {
+          q: '¿Cómo pasar de Watts a Frigorías en un aire acondicionado?',
+          a: 'Multiplicá los Watts de capacidad de refrigeración que figuran en la ficha técnica por 0.86 (o dividilos por 1.163). Ejemplo: 3500W x 0.86 = 3.010 frigorías.'
+        },
+        {
+          q: '¿Cuántas frigorías son 2600W, 3400W y 5200W?',
+          a: 'Un equipo de 2.600W a 2.700W equivale a 2.250 - 2.300 frigorías; uno de 3.400W a 3.550W equivale a 3.000 frigorías; y uno de 5.100W a 5.300W equivale a 4.500 frigorías.'
+        },
+        {
+          q: '¿Los Watts de capacidad de refrigeración son lo mismo que los Watts de consumo eléctrico?',
+          a: 'No. La capacidad de refrigeración (ej. 3.500W) mide cuánto calor extrae del ambiente, mientras que el consumo eléctrico de la red es más de 3 veces menor (unos 980W en equipos Clase A o menos aún en modelos Inverter).'
+        }
+      ]
+    }
+  },
+
+  // 9. Precio de Kit de Instalación y Materiales
+  {
+    slug: 'kit-instalacion-aire-acondicionado-materiales',
+    path: '/precios/kit-instalacion-aire-acondicionado-materiales',
+    category: 'precios',
+    badge: 'Guía de Materiales y Kits 2026',
+    title: 'Materiales para Instalar un Aire Acondicionado Split y Precios de Kits (2026) | KalkulAR',
+    metaDescription: 'Lista exacta de materiales para instalar un aire acondicionado Split de 2250, 3000, 4500 y 6000 frigorías. Diámetros de caño de cobre, ménsulas y precios en Mercado Libre.',
+    h1: 'Lista de Materiales y Precio del Kit para Instalar un Aire Acondicionado Split (2026)',
+    subtitle: 'Qué lleva el kit reglamentario de 3 metros según las frigorías de tu equipo y cuánto ahorrás comprándolo en Mercado Libre.',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_bedroom_medium',
+      length: 4.0,
+      width: 3.5,
+      height: 2.5,
+      acRoofType: 'slab_covered',
+      acSunExposure: 'low_south',
+      acInternalLoads: [],
+      acPipeMeters: 3,
+      acInstallConditions: [],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'Para instalar un aire acondicionado Split en Argentina necesitás un Kit de Instalación de 3 metros compuesto por: 2 rollos de 3m de caño de cobre (1/4" y 3/8" para 2250/3000 fg, o 1/4" y 1/2" para 4500/6000 fg), tubos aislantes negros, par de ménsulas epoxi (42cm o 52cm) con tirafondos y tacos de goma, 3.5m de cable TPR 5x1.5mm, 3m de manguera cristal y cinta PVC. En Mercado Libre el kit completo cuesta entre $82.000 y $135.000 ARS.',
+      metrics: {
+        totalM2: '3 metros (Mínimo Garantía)',
+        wallM2: '2250/3000 fg -> 1/4" y 3/8"',
+        ceilingM2: '4500/6000 fg -> 1/4" y 1/2"',
+        paintLiters: 'Kit 1/4 y 3/8: ~$94.000 ARS',
+        ceilingLiters: 'Kit 1/4 y 1/2: ~$115.000 ARS',
+        laborFairPrice: '$155.000 ARS (Mano de obra)',
+        laborRange: 'Ahorro 30% comprando Kit ML',
+        materialsCost: '$94.000 a $115.000 ARS',
+        estimatedDays: 'Envío gratis a domicilio'
+      },
+      editorialParagraphs: [
+        'Las terminales fabricantes de aires acondicionados en Argentina ya no incluyen los caños de cobre ni las ménsulas dentro de la caja del equipo. Para conservar la garantía oficial de 1 a 3 años, todos los manuales exigen instalar un mínimo de 3 metros lineales de cañería de cobre sin costura.',
+        'El detalle clave antes de pedir el kit en Mercado Libre es verificar las frigorías del equipo para elegir el diámetro correcto del caño grueso (succión/baja): los equipos de 2.250 a 3.000 frigorías utilizan caños de 1/4" y 3/8" con ménsulas de 42 cm, mientras que los de 4.500 a 6.000 frigorías llevan caños de 1/4" y 1/2" con ménsulas reforzadas de 52 cm.',
+        'Además del kit mecánico, es altamente recomendable sumar al carrito un protector de alta y baja tensión digital de 20 Amperes ($35.000 ARS aprox.) para resguardar la placa electrónica ante cortes de luz en verano.'
+      ],
+      faqs: [
+        {
+          q: '¿Qué trae un kit de instalación completo para aire acondicionado Split?',
+          a: 'Trae 3 metros de caño de cobre de alta (1/4") y 3 metros de baja (3/8" o 1/2"), 6 metros de aislante elastomérico negro, 1 juego de ménsulas pintadas epoxi con tirafondos, tarugos y patas de goma antivibratorias, 3.5 metros de cable tipo taller 5x1.5mm, 3 metros de manguera cristal de desagüe y 1 o 2 rollos de cinta PVC blanca.'
+        },
+        {
+          q: '¿Qué medida de caño de cobre lleva un aire de 3000 y de 4500 frigorías?',
+          a: 'Los aires de 2.250 y 3.000 frigorías llevan caños de 1/4" y 3/8". Los aires de 4.500 y 6.000 frigorías llevan caños de 1/4" y 1/2" (algunos modelos de 6.000 fg requieren 1/4" y 5/8", verificable en la etiqueta lateral del equipo).'
+        },
+        {
+          q: '¿Por qué exigen mínimo 3 metros de caño aunque la unidad exterior esté detrás de la misma pared?',
+          a: 'Porque una cañería menor a 2.5 o 3 metros transmite la vibración y el zumbido del compresor directamente a la unidad interior, puede provocar retornos de refrigerante líquido y anula la garantía oficial de fábrica.'
+        }
+      ]
+    }
+  },
+
+  // 10. Precio de Desinstalación y Traslado por Mudanza
+  {
+    slug: 'desinstalacion-y-traslado-aire-acondicionado',
+    path: '/precios/desinstalacion-y-traslado-aire-acondicionado',
+    category: 'precios',
+    badge: 'Guía Mudanza y Reinstalación 2026',
+    title: 'Precio de Desinstalación y Traslado de Aire Acondicionado en Argentina (2026) | KalkulAR',
+    metaDescription: '¿Cuánto cuesta desinstalar un aire acondicionado Split por mudanza y volver a instalarlo en 2026? Tarifas oficiales CACAAV, recupero de gas y materiales nuevos.',
+    h1: 'Precio de Desinstalación y Reinstalación de Aire Acondicionado en Argentina (2026)',
+    subtitle: 'Costos de desmonte con recuperación de gas refrigerante (pump down), reinstalación en nuevo domicilio y recambio de cañerías.',
+    calculatorPreset: {
+      jobCategory: 'ac',
+      acRoomType: 'ac_bedroom_medium',
+      length: 4.0,
+      width: 3.5,
+      height: 2.5,
+      acRoofType: 'slab_covered',
+      acSunExposure: 'low_south',
+      acInternalLoads: [],
+      acPipeMeters: 3,
+      acInstallConditions: ['removeOldUnit'],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'En Argentina (temporada 2026/2027), desinstalar un aire acondicionado Split de hasta 4.500 frigorías cuesta entre $75.000 y $105.000 ARS (promedio justo: $85.000 ARS), incluyendo el envasado del gas refrigerante dentro del compresor. Si contratás el combo completo de desinstalación + reinstalación en el nuevo domicilio, la mano de obra total ronda los $240.000 ARS más el kit de caños nuevos.',
+      metrics: {
+        totalM2: 'Desmonte + Pump Down',
+        wallM2: 'Desinstalación: $85.000 ARS',
+        ceilingM2: 'Reinstalación: $155.000 ARS',
+        paintLiters: 'Combo Mudanza: ~$240.000 ARS',
+        ceilingLiters: 'Recupero 100% del gas R410A',
+        laborFairPrice: '$240.000 ARS (Desmonte + Colocación)',
+        laborRange: '$200.000 a $290.000 ARS',
+        materialsCost: '~$94.000 ARS (Si renueva caños)',
+        estimatedDays: '1 jornada (Ambos domicilios)'
+      },
+      editorialParagraphs: [
+        'Al mudarse de departamento o casa, jamás se deben aflojar las tuercas de un aire acondicionado sin antes realizar la maniobra técnica de "pump down" (recuperación de refrigerante). Si se desconectan los caños directamente, se libera todo el gas R410A a la atmósfera, entra humedad al circuito y luego habrá que pagar más de $90.000 ARS adicionales por una carga completa de gas.',
+        'Un técnico matriculado enciende el equipo en modo Frío, cierra la válvula de alta presión con llave Allen, espera unos 45 a 60 segundos hasta que el manómetro marque vacío (envasando todo el gas dentro de la unidad exterior), cierra la válvula de baja y apaga el equipo en el acto. Así el gas original se conserva intacto para el nuevo hogar.',
+        'Al reinstalar el equipo en la nueva vivienda, los profesionales aconsejan utilizar un kit nuevo de caños de cobre y aislantes si los caños anteriores quedaron endurecidos o estrangulados durante el desmonte.'
+      ],
+      faqs: [
+        {
+          q: '¿Cuánto cobra un técnico por desinstalar un aire acondicionado Split en 2026?',
+          a: 'El servicio de desinstalación profesional con recupero de gas refrigerante, retiro de unidad interior, exterior y ménsulas tiene un valor promedio de $85.000 ARS (entre $75.000 y $105.000 ARS según dificultad de acceso).'
+        },
+        {
+          q: '¿Se pierde el gas refrigerante al desinstalar el aire acondicionado?',
+          a: 'No. Si la desinstalación la realiza un técnico calificado cerrando las válvulas de servicio con manómetro (pump down), se recupera casi el 100% del gas dentro del motocompresor y no necesitás pagar una carga de gas nueva al reinstalarlo.'
+        },
+        {
+          q: '¿Se pueden reutilizar los caños de cobre viejos al mudar el aire acondicionado?',
+          a: 'El cobre sufre endurecimiento mecánico con el tiempo y los ciclos térmicos. Intentar enderezar y volver a doblar un caño viejo suele provocar estrangulamientos o microperforaciones, por lo que casi siempre conviene instalar un kit de caños nuevos.'
+        }
+      ]
+    }
+  }
+];
+
+// Incorporar las 10 páginas de Climatización a la lista principal PSEO_PAGES
+PSEO_PAGES.push(...AC_PSEO_PAGES);
+
+/**
  * Busca una página de SEO programático a partir de la ruta actual
  */
 export function getPseoPageByPath(pathname) {

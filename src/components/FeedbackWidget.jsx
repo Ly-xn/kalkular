@@ -8,7 +8,7 @@ import { MessageSquarePlus, X, Send, CheckCircle2, AlertCircle, Loader2, Sparkle
  */
 const DEFAULT_FORMSPREE_ENDPOINT = 'https://formspree.io/f/mjykbojp';
 
-export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
+export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT, isAcMode = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState('sugerencia'); // 'sugerencia' | 'error' | 'opinion'
   const [message, setMessage] = useState('');
@@ -99,10 +99,12 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
           id="btn-open-feedback"
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className={`group flex items-center gap-2 rounded-full px-4 py-3 text-xs md:text-sm font-bold text-white shadow-[0_8px_30px_-5px_rgba(255,106,0,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer border border-white/20 ${
+          className={`group flex items-center gap-2 rounded-full px-4 py-3 text-xs md:text-sm font-bold text-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer border border-white/20 ${
             isOpen
               ? 'bg-slate-800 dark:bg-slate-700 shadow-slate-900/50'
-              : 'bg-gradient-to-r from-[#ff6a00] to-[#ea580c] hover:shadow-[0_10px_35px_-5px_rgba(255,106,0,0.7)]'
+              : isAcMode
+              ? 'bg-gradient-to-r from-sky-500 to-blue-600 shadow-[0_8px_30px_-5px_rgba(14,165,233,0.5)] hover:shadow-[0_10px_35px_-5px_rgba(14,165,233,0.7)]'
+              : 'bg-gradient-to-r from-[#ff6a00] to-[#ea580c] shadow-[0_8px_30px_-5px_rgba(255,106,0,0.5)] hover:shadow-[0_10px_35px_-5px_rgba(255,106,0,0.7)]'
           }`}
           aria-label={isOpen ? 'Cerrar ventana de sugerencias' : 'Dejar sugerencia o comentario'}
           title="Dejanos tu sugerencia o comentario"
@@ -117,8 +119,8 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
               <MessageSquarePlus className="h-5 w-5 transition-transform group-hover:scale-110" />
               <span className="font-extrabold tracking-wide">¿Sugerencias?</span>
               <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-300 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-400"></span>
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isAcMode ? 'bg-cyan-300' : 'bg-yellow-300'}`}></span>
+                <span className={`relative inline-flex rounded-full h-2 w-2 ${isAcMode ? 'bg-cyan-400' : 'bg-yellow-400'}`}></span>
               </span>
             </>
           )}
@@ -134,7 +136,11 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
           {/* Header */}
           <div className="flex items-start justify-between pb-3 border-b border-slate-100 dark:border-white/10">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ff6a00]/15 text-[#ff7d1a] border border-[#ff6a00]/30">
+              <div className={`flex h-9 w-9 items-center justify-center rounded-xl border ${
+                isAcMode
+                  ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border-sky-500/30'
+                  : 'bg-[#ff6a00]/15 text-[#ff7d1a] border-[#ff6a00]/30'
+              }`}>
                 <Sparkles className="h-4 w-4" />
               </div>
               <div>
@@ -179,7 +185,9 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
                     onClick={() => setCategory('sugerencia')}
                     className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer ${
                       category === 'sugerencia'
-                        ? 'bg-[#ff6a00] text-white shadow-sm shadow-[#ff6a00]/30'
+                        ? isAcMode
+                          ? 'bg-sky-600 text-white shadow-sm shadow-sky-600/30'
+                          : 'bg-[#ff6a00] text-white shadow-sm shadow-[#ff6a00]/30'
                         : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10'
                     }`}
                   >
@@ -192,7 +200,9 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
                     onClick={() => setCategory('error')}
                     className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer ${
                       category === 'error'
-                        ? 'bg-[#ff6a00] text-white shadow-sm shadow-[#ff6a00]/30'
+                        ? isAcMode
+                          ? 'bg-sky-600 text-white shadow-sm shadow-sky-600/30'
+                          : 'bg-[#ff6a00] text-white shadow-sm shadow-[#ff6a00]/30'
                         : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10'
                     }`}
                   >
@@ -205,7 +215,9 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
                     onClick={() => setCategory('opinion')}
                     className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all cursor-pointer ${
                       category === 'opinion'
-                        ? 'bg-[#ff6a00] text-white shadow-sm shadow-[#ff6a00]/30'
+                        ? isAcMode
+                          ? 'bg-sky-600 text-white shadow-sm shadow-sky-600/30'
+                          : 'bg-[#ff6a00] text-white shadow-sm shadow-[#ff6a00]/30'
                         : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10'
                     }`}
                   >
@@ -218,7 +230,7 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
               {/* Mensaje / Sugerencia (Campo Principal Obligatorio) */}
               <div>
                 <label htmlFor="feedback-message" className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Tu mensaje <span className="text-[#ff6a00]">*</span>
+                  Tu mensaje <span className={isAcMode ? 'text-sky-500' : 'text-[#ff6a00]'}>*</span>
                 </label>
                 <textarea
                   id="feedback-message"
@@ -227,7 +239,9 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Escribí acá tu sugerencia, qué agregarías o qué podríamos mejorar..."
-                  className="w-full resize-none rounded-2xl border border-slate-300 dark:border-white/15 bg-slate-50 dark:bg-white/5 p-3 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-[#ff6a00] focus:ring-1 focus:ring-[#ff6a00] focus:outline-none transition-colors"
+                  className={`w-full resize-none rounded-2xl border border-slate-300 dark:border-white/15 bg-slate-50 dark:bg-white/5 p-3 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none transition-colors ${
+                    isAcMode ? 'focus:border-sky-500 focus:ring-1 focus:ring-sky-500' : 'focus:border-[#ff6a00] focus:ring-1 focus:ring-[#ff6a00]'
+                  }`}
                 />
               </div>
 
@@ -245,7 +259,9 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Por si querés que te respondamos"
-                  className="w-full rounded-xl border border-slate-300 dark:border-white/15 bg-slate-50 dark:bg-white/5 px-3 py-2 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-[#ff6a00] focus:ring-1 focus:ring-[#ff6a00] focus:outline-none transition-colors"
+                  className={`w-full rounded-xl border border-slate-300 dark:border-white/15 bg-slate-50 dark:bg-white/5 px-3 py-2 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none transition-colors ${
+                    isAcMode ? 'focus:border-sky-500 focus:ring-1 focus:ring-sky-500' : 'focus:border-[#ff6a00] focus:ring-1 focus:ring-[#ff6a00]'
+                  }`}
                 />
               </div>
 
@@ -261,7 +277,11 @@ export function FeedbackWidget({ endpoint = DEFAULT_FORMSPREE_ENDPOINT }) {
               <button
                 type="submit"
                 disabled={isSubmitting || !message.trim()}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ff6a00] to-[#ea580c] py-2.5 text-xs font-bold text-white shadow-md shadow-[#ff6a00]/30 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
+                className={`w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold text-white shadow-md hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer ${
+                  isAcMode
+                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 shadow-sky-500/30'
+                    : 'bg-gradient-to-r from-[#ff6a00] to-[#ea580c] shadow-[#ff6a00]/30'
+                }`}
               >
                 {isSubmitting ? (
                   <>

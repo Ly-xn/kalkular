@@ -34,6 +34,28 @@ export default function App() {
     return getPseoPageByPath(currentPath);
   }, [currentPath]);
 
+  // Categoría activa para el Sistema de Tema Visual Dinámico ('walls' | 'rejas' | 'ac')
+  const [activeCategory, setActiveCategory] = React.useState(() => {
+    return activePseoPage?.calculatorPreset?.jobCategory || 'walls';
+  });
+
+  // Estado de Auto-Rotación Dinámica (Auto-Showcase Cycle) activo solo en Home (/)
+  const [isAutoRotating, setIsAutoRotating] = React.useState(() => !activePseoPage);
+
+  // Sincronizar categoría activa cuando cambia la ruta pSEO
+  React.useEffect(() => {
+    if (activePseoPage?.calculatorPreset?.jobCategory) {
+      setActiveCategory(activePseoPage.calculatorPreset.jobCategory);
+      setIsAutoRotating(false);
+    }
+  }, [activePseoPage]);
+
+  const stopAutoRotation = React.useCallback(() => {
+    setIsAutoRotating(false);
+  }, []);
+
+  const isAcMode = activeCategory === 'ac';
+
   // Escuchar navegación del historial (Atrás / Adelante)
   React.useEffect(() => {
     const handlePopState = () => {
@@ -79,11 +101,14 @@ export default function App() {
       window.history.pushState({}, '', '/');
       setCurrentPath('/');
     }
+    setActiveCategory('walls');
+    setIsAutoRotating(true);
     setWizardKey(prev => prev + 1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleScrollToCalculator = () => {
+    setIsAutoRotating(false);
     const el = document.getElementById('calculadora');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -91,9 +116,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#0a0d14] dark:text-slate-100 flex flex-col font-sans selection:bg-[#ff6a00] selection:text-white transition-colors duration-300">
+    <div className={`min-h-screen bg-slate-50 text-slate-900 dark:bg-[#0a0d14] dark:text-slate-100 flex flex-col font-sans ${isAcMode ? 'selection:bg-sky-500' : 'selection:bg-[#ff6a00]'} selection:text-white transition-colors duration-300`}>
       {/* Marcado de Datos Estructurados Schema.org / JSON-LD dinámico */}
-      <JsonLdSchema pseoPage={activePseoPage} />
+      <JsonLdSchema pseoPage={activePseoPage} isAcMode={isAcMode} />
 
       {/* Floating Dock Navbar */}
       <Navbar 
@@ -101,6 +126,7 @@ export default function App() {
         onReset={handleResetAll} 
         theme={theme}
         onToggleTheme={toggleTheme}
+        isAcMode={isAcMode}
       />
 
       {/* Main Content */}
@@ -109,12 +135,20 @@ export default function App() {
         <Hero 
           onStartCalculator={handleScrollToCalculator} 
           pseoPage={activePseoPage}
+          isAcMode={isAcMode}
+          activeCategory={activeCategory}
+          onSelectCategory={setActiveCategory}
+          isAutoRotating={isAutoRotating}
+          onStopAutoRotate={stopAutoRotation}
         />
 
         {/* Wizard Calculadora pre-cargado con los datos del ambiente */}
         <CalculatorWizard 
           key={`${wizardKey}-${activePseoPage?.slug || 'home'}`} 
           initialPreset={activePseoPage?.calculatorPreset}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          onUserInteract={stopAutoRotation}
         />
 
         {/* Bloque Editorial Específico de la Landing Programática */}
@@ -122,36 +156,38 @@ export default function App() {
           <PseoEditorialSection 
             pseoPage={activePseoPage}
             onResetToGeneral={handleResetAll}
+            isAcMode={isAcMode}
           />
         )}
 
         {/* Sección de Transparencia y Fórmulas */}
-        <TransparencySection />
+        <TransparencySection isAcMode={isAcMode} />
 
         {/* Guía de Costos Testigo de Mano de Obra en Argentina (SEO & Transparencia) */}
-        <LaborPriceGuideTable />
+        <LaborPriceGuideTable isAcMode={isAcMode} />
 
         {/* Comparativa Técnica de Rendimiento de Marcas Líderes (SEO & Afiliados) */}
-        <BrandComparisonTable />
+        <BrandComparisonTable isAcMode={isAcMode} />
 
         {/* Hub de Enlazado Interno: Grilla de Presupuestos Rápidos */}
-        <PresetLinksGrid currentPath={currentPath} />
+        <PresetLinksGrid currentPath={currentPath} isAcMode={isAcMode} />
 
         {/* Por qué elegirnos / Social Proof */}
-        <WhyUsSection />
+        <WhyUsSection isAcMode={isAcMode} />
 
         {/* FAQ Preguntas Frecuentes Sincronizadas con Google Rich Snippets */}
-        <FaqSection />
+        <FaqSection isAcMode={isAcMode} />
       </main>
 
       {/* Footer con Disclaimer de Afiliados */}
       <Footer 
         onOpenCalculator={handleScrollToCalculator} 
-        onReset={handleResetAll} 
+        onReset={handleResetAll}
+        isAcMode={isAcMode}
       />
 
       {/* Botón Flotante de Sugerencias y Comentarios */}
-      <FeedbackWidget />
+      <FeedbackWidget isAcMode={isAcMode} />
 
       {/* Métricas y Monitoreo de Visitas de Vercel */}
       <SpeedInsights />
