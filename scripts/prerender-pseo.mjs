@@ -229,7 +229,7 @@ function generateStaticBodyForPseo(page) {
       </section>
 
       <footer style="text-align: center; padding: 1.5rem 0;">
-        <a href="${isAc ? '/calculadora-frigorias-aire-acondicionado' : '/'}" style="display: inline-block; background: ${ctaBg}; color: #ffffff; font-weight: 800; font-size: 0.95rem; text-decoration: none; padding: 0.85rem 1.75rem; border-radius: 0.75rem;">
+        <a href="${isAc ? '/calculadora-frigorias-aire-acondicionado' : '/calculadora-pintura-mano-de-obra'}" style="display: inline-block; background: ${ctaBg}; color: #ffffff; font-weight: 800; font-size: 0.95rem; text-decoration: none; padding: 0.85rem 1.75rem; border-radius: 0.75rem;">
           ${isAc ? 'Calcular Frigorías e Instalación con Medidas Personalizadas' : 'Calcular Presupuesto con Medidas Personalizadas'}
         </a>
       </footer>
@@ -244,10 +244,20 @@ let generatedCount = 0;
 
 for (const page of PSEO_PAGES) {
   const cleanRelative = page.path.replace(/^\//, '');
-  const targetDir = path.join(distDir, cleanRelative);
-  const targetFile = path.join(targetDir, 'index.html');
+  const targetFile = path.join(distDir, `${cleanRelative}.html`);
+  const targetDir = path.dirname(targetFile);
 
+  // Asegurar que el directorio contenedor exista (dist/presupuesto, dist/precios, dist/guia o dist)
   fs.mkdirSync(targetDir, { recursive: true });
+
+  // Si existiera una subcarpeta previa con el mismo nombre (ej: dist/presupuesto/pintar-habitacion-3x3/)
+  // eliminarla para que Vercel sirva el archivo .html plano y no emita redirecciones de carpeta (308)
+  const oldDir = path.join(distDir, cleanRelative);
+  if (fs.existsSync(oldDir) && fs.statSync(oldDir).isDirectory()) {
+    try {
+      fs.rmSync(oldDir, { recursive: true, force: true });
+    } catch {}
+  }
 
   let pageHtml = baseHtml;
 
@@ -303,7 +313,7 @@ for (const page of PSEO_PAGES) {
 
   fs.writeFileSync(targetFile, pageHtml, 'utf-8');
   generatedCount++;
-  console.log(`  ✅ Generado: ${cleanRelative}/index.html`);
+  console.log(`  ✅ Generado archivo plano: ${cleanRelative}.html`);
 }
 
 // Actualizar también dist/index.html (Home) inyectando JSON-LD base

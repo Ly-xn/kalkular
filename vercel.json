@@ -3,9 +3,10 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/((?!robots\\.txt|sitemap\\.xml|favicon\\.svg|favicon-96x96\\.png|favicon-48x48\\.png|apple-touch-icon\\.png|site\\.webmanifest|icons\\.svg|og-image\\.png|assets/|presupuesto/|precios/|guia/|calculadora-frigorias-aire-acondicionado).*)",
+      "source": "/((?!.*\\..*|presupuesto/|precios/|guia/|calculadora-).*)",
       "destination": "/index.html"
     }
   ],

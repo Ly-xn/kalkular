@@ -66,6 +66,12 @@ export function Footer({ onOpenCalculator, onReset, isAcMode = false }) {
               Calculadora
             </a>
             <a 
+              href="/calculadora-pintura-mano-de-obra" 
+              className="hover:text-[#ff6a00] font-semibold transition-colors"
+            >
+              🎨 Calculadora Pintura
+            </a>
+            <a 
               href="/calculadora-frigorias-aire-acondicionado" 
               className="hover:text-sky-600 dark:hover:text-sky-400 font-semibold transition-colors"
             >

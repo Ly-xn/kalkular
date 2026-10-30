@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Shield, Snowflake, ArrowRight, Sparkles, Paintbrush } from 'lucide-react';
+import { Home, Shield, Snowflake, ArrowRight, Sparkles } from 'lucide-react';
 import { PSEO_PAGES } from '../../config/pseo.config.js';
 
 export function PresetLinksGrid({ currentPath, isAcMode = false }) {
@@ -15,7 +15,7 @@ export function PresetLinksGrid({ currentPath, isAcMode = false }) {
   const paintPages = PSEO_PAGES.filter(p => p.calculatorPreset?.jobCategory !== 'ac');
 
   const roomPages = paintPages.filter(p => p.category === 'presupuesto' && !p.slug.includes('reja') && !p.slug.includes('porton'));
-  const ironAndGuides = paintPages.filter(p => p.slug.includes('reja') || p.slug.includes('porton') || p.category === 'precios');
+  const ironAndGuides = paintPages.filter(p => p.slug.includes('reja') || p.slug.includes('porton') || p.category === 'precios' || p.category === 'herramienta');
 
   const showPaint = activeFilter === 'all' || activeFilter === 'paint';
   const showAc = activeFilter === 'all' || activeFilter === 'ac';
@@ -177,7 +177,7 @@ export function PresetLinksGrid({ currentPath, isAcMode = false }) {
                       </div>
 
                       <div className="mt-4 pt-3 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs font-semibold text-[#ea580c] dark:text-[#ff7d1a]">
-                        <span>Ver presupuesto</span>
+                        <span>{page.category === 'herramienta' ? 'Abrir calculadora' : 'Ver presupuesto'}</span>
                         <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </a>
@@ -219,7 +219,7 @@ export function PresetLinksGrid({ currentPath, isAcMode = false }) {
                       </div>
 
                       <div className="mt-4 pt-3 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs font-semibold text-[#ea580c] dark:text-[#ff7d1a]">
-                        <span>Ver presupuesto</span>
+                        <span>{page.category === 'herramienta' ? 'Abrir calculadora' : 'Ver presupuesto'}</span>
                         <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </a>

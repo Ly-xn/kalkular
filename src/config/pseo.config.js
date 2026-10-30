@@ -673,6 +673,62 @@ export const PSEO_PAGES = [
         }
       ]
     }
+  },
+
+  // 13. Calculadora de Pintura y Mano de Obra (Landing Pilar de Herramienta)
+  {
+    slug: 'calculadora-pintura-mano-de-obra',
+    path: '/calculadora-pintura-mano-de-obra',
+    category: 'herramienta',
+    badge: 'Calculadora Oficial de Pintura 2026',
+    title: 'Calculadora de Pintura y Mano de Obra por m² en Argentina (2026) | KalkulAR',
+    metaDescription: 'Calculá gratis en segundos el costo de mano de obra de pintor por m², litros exactos de pintura látex y materiales con envío a domicilio por Mercado Libre en Argentina.',
+    h1: 'Calculadora de Pintura y Mano de Obra por m² en Argentina (2026)',
+    subtitle: 'Cálculo de m² netos descontando aberturas, rendimiento oficial por litro de marcas líderes y presupuesto testigo de mano de obra en ARS.',
+    calculatorPreset: {
+      jobCategory: 'walls',
+      roomType: 'room_medium',
+      length: 4.0,
+      width: 3.5,
+      height: 2.5,
+      openingsDeductionM2: 3.5,
+      paintCeiling: true,
+      selectedConditions: ['minorCracks'],
+      materialsBuyer: 'client'
+    },
+    seoContent: {
+      quickAnswer: 'Para calcular el presupuesto de pintura en Argentina (2026), se calculan los metros cuadrados netos de paredes descontando aberturas (puertas y ventanas) y sumando cielorrasos. El costo testigo de mano de obra de pintor ronda entre $3.800 y $5.500 ARS por m² para 2 manos de látex, y el consumo promedio es de 1 litro cada 10 a 12 m² por mano.',
+      metrics: {
+        totalM2: '37.5 m² netos (Base 4x3.5m)',
+        wallM2: '37.5 m² (Paredes)',
+        ceilingM2: '14.0 m² (Cielorraso)',
+        paintLiters: '10 a 12 Litros (Látex interior)',
+        ceilingLiters: '3 a 4 Litros (Antihongo mate)',
+        laborFairPrice: '$165.000 ARS (Promedio)',
+        laborRange: '$140.000 a $210.000 ARS',
+        materialsCost: '~$78.000 ARS',
+        estimatedDays: '2 días hábiles'
+      },
+      editorialParagraphs: [
+        'Nuestra calculadora técnica de pintura permite estimar con precisión matemática los litros reales de pintura y el valor justo de mano de obra de pintores profesionales en Argentina, tomando en cuenta si comprás vos los materiales o si los provee el contratista.',
+        'El algoritmo calcula el área geométrica total del ambiente, deduce automáticamente la superficie de puertas y ventanas para no pagar mano de obra sobre vanos vacíos, y calcula la cantidad necesaria de sellador fijador, enduido plástico para fisuras y lijas según las condiciones del muro.',
+        'En 2026, el valor promedio del metro cuadrado de pintura interior en Argentina se ubica entre $3.800 y $5.500 ARS para trabajos estándar de preparación, masillado y dos manos de látex lavable. Con KalkulAR evitás presupuestos inflados y contás con una lista de materiales lista para comparar en Mercado Libre.'
+      ],
+      faqs: [
+        {
+          q: '¿Cómo funciona la calculadora de pintura y mano de obra?',
+          a: 'Ingresás las medidas de tu ambiente (largo, ancho y altura), seleccionás si pintás cielorraso y el estado de las paredes. La herramienta descuenta puertas y ventanas automáticamente, calcula los litros de látex necesarios según rendimientos certificados y cotiza la mano de obra según tarifas testigo actualizadas en Argentina.'
+        },
+        {
+          q: '¿Cuánto cuesta el metro cuadrado de mano de obra de pintor en 2026?',
+          a: 'En Argentina, pintar paredes interiores a 2 manos con preparación básica y enduido de pequeñas grietas cuesta entre $3.800 y $5.500 ARS por m², con un promedio de referencia de $4.500 ARS por m².'
+        },
+        {
+          q: '¿Por qué conviene comprar los materiales por Mercado Libre?',
+          a: 'Comprar vos mismo los baldes de pintura, fijador y rodillos en Tiendas Oficiales de Mercado Libre te asegura precios directos de fábrica, cuotas sin interés y evita el recargo habitual del 15% al 25% que agregan los contratistas al revender materiales.'
+        }
+      ]
+    }
   }
 ];
 
